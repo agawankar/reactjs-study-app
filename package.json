@@ -1,6 +1,6 @@
 {
   "name": "studyapp",
-  "description": "Frontend Interview Handbook — a searchable, bookmarkable guide covering JavaScript, React, system design, and more for frontend engineering interviews.",
+  "description": "Frontend Interview Handbook — a searchable guide covering JavaScript, React, system design, and more for frontend engineering interviews.",
   "private": true,
   "version": "1.0.0",
   "type": "module",
