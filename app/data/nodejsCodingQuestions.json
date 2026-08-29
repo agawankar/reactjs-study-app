@@ -1,0 +1,200 @@
+[
+  {
+    "id": 86,
+    "title": "Read a File Asynchronously",
+    "category": "File System",
+    "difficulty": "Easy",
+    "question": "Read the contents of a text file asynchronously without blocking the event loop.",
+    "solution": "const fs = require(\"fs\");\n\nfs.readFile(\"data.txt\", \"utf8\", (err, data) => {\n  if (err) {\n    console.error(\"Error reading file:\", err.message);\n    return;\n  }\n  console.log(data);\n});",
+    "key_concept": "Non-blocking I/O; fs.readFile takes an error-first callback"
+  },
+  {
+    "id": 87,
+    "title": "Read a File Synchronously",
+    "category": "File System",
+    "difficulty": "Easy",
+    "question": "Read a file synchronously and handle the case where the file doesn't exist.",
+    "solution": "const fs = require(\"fs\");\n\nfunction readFileSafe(path) {\n  try {\n    return fs.readFileSync(path, \"utf8\");\n  } catch (err) {\n    console.error(`Could not read ${path}:`, err.message);\n    return null;\n  }\n}\n\nconsole.log(readFileSafe(\"data.txt\"));",
+    "key_concept": "fs.readFileSync blocks the event loop; always wrap it in try/catch"
+  },
+  {
+    "id": 88,
+    "title": "Write and Append to a File",
+    "category": "File System",
+    "difficulty": "Easy",
+    "question": "Write a string to a file, then append another line to it.",
+    "solution": "const fs = require(\"fs\");\n\nfs.writeFileSync(\"log.txt\", \"First line\\n\");\nfs.appendFileSync(\"log.txt\", \"Second line\\n\");\n\nconsole.log(fs.readFileSync(\"log.txt\", \"utf8\"));\n// First line\n// Second line",
+    "key_concept": "writeFile overwrites the file; appendFile adds to the end"
+  },
+  {
+    "id": 89,
+    "title": "Watch a File for Changes",
+    "category": "File System",
+    "difficulty": "Medium",
+    "question": "Watch a file and log a message whenever it changes.",
+    "solution": "const fs = require(\"fs\");\n\nfs.watch(\"config.json\", (eventType, filename) => {\n  console.log(`${filename} changed: ${eventType}`);\n});",
+    "key_concept": "fs.watch emits 'change' or 'rename' events; behavior is OS-dependent"
+  },
+  {
+    "id": 90,
+    "title": "Create an HTTP Server",
+    "category": "HTTP",
+    "difficulty": "Easy",
+    "question": "Create a basic HTTP server using the built-in http module that responds with 'Hello World'.",
+    "solution": "const http = require(\"http\");\n\nconst server = http.createServer((req, res) => {\n  res.writeHead(200, { \"Content-Type\": \"text/plain\" });\n  res.end(\"Hello World\");\n});\n\nserver.listen(3000, () => console.log(\"Server running on port 3000\"));",
+    "key_concept": "http.createServer takes a request listener invoked for every incoming request"
+  },
+  {
+    "id": 91,
+    "title": "Parse Query String Parameters",
+    "category": "HTTP",
+    "difficulty": "Easy",
+    "question": "Extract query parameters from an incoming request URL, e.g. /search?q=node&page=2.",
+    "solution": "const http = require(\"http\");\n\nhttp.createServer((req, res) => {\n  const { searchParams } = new URL(req.url, `http://${req.headers.host}`);\n  res.end(`q=${searchParams.get(\"q\")}, page=${searchParams.get(\"page\")}`);\n}).listen(3000);",
+    "key_concept": "The built-in URL API parses search params without manual string splitting"
+  },
+  {
+    "id": 92,
+    "title": "Build a Minimal Router",
+    "category": "HTTP",
+    "difficulty": "Medium",
+    "question": "Route GET /users and POST /users differently using only the built-in http module (no framework).",
+    "solution": "const http = require(\"http\");\n\nconst server = http.createServer((req, res) => {\n  if (req.method === \"GET\" && req.url === \"/users\") {\n    res.end(JSON.stringify([{ id: 1, name: \"Abhijit\" }]));\n  } else if (req.method === \"POST\" && req.url === \"/users\") {\n    let body = \"\";\n    req.on(\"data\", (chunk) => (body += chunk));\n    req.on(\"end\", () => {\n      res.statusCode = 201;\n      res.end(`Created: ${body}`);\n    });\n  } else {\n    res.statusCode = 404;\n    res.end(\"Not found\");\n  }\n});\n\nserver.listen(3000);",
+    "key_concept": "Manual routing checks req.method/req.url; request bodies arrive as stream chunks"
+  },
+  {
+    "id": 93,
+    "title": "Create an Express Server",
+    "category": "Express",
+    "difficulty": "Easy",
+    "question": "Set up an Express server with a single GET / route.",
+    "solution": "const express = require(\"express\");\nconst app = express();\n\napp.get(\"/\", (req, res) => {\n  res.send(\"Hello from Express\");\n});\n\napp.listen(3000, () => console.log(\"Listening on 3000\"));",
+    "key_concept": "Express wraps the http module with routing and middleware conveniences"
+  },
+  {
+    "id": 94,
+    "title": "Write Logging Middleware",
+    "category": "Express",
+    "difficulty": "Easy",
+    "question": "Write Express middleware that logs the method and URL of every request.",
+    "solution": "const express = require(\"express\");\nconst app = express();\n\napp.use((req, res, next) => {\n  console.log(`${req.method} ${req.url}`);\n  next();\n});\n\napp.get(\"/\", (req, res) => res.send(\"OK\"));\napp.listen(3000);",
+    "key_concept": "Middleware runs in registration order; call next() to continue the chain"
+  },
+  {
+    "id": 95,
+    "title": "Write Centralized Error-Handling Middleware",
+    "category": "Express",
+    "difficulty": "Medium",
+    "question": "Add a centralized error handler in Express that catches errors thrown in any route.",
+    "solution": "const express = require(\"express\");\nconst app = express();\n\napp.get(\"/risky\", (req, res, next) => {\n  try {\n    throw new Error(\"Something broke\");\n  } catch (err) {\n    next(err);\n  }\n});\n\n// Error middleware takes 4 arguments\napp.use((err, req, res, next) => {\n  console.error(err.stack);\n  res.status(500).json({ error: err.message });\n});\n\napp.listen(3000);",
+    "key_concept": "Express identifies error-handling middleware by its 4-argument signature (err, req, res, next)"
+  },
+  {
+    "id": 96,
+    "title": "Implement a Custom EventEmitter",
+    "category": "Events",
+    "difficulty": "Medium",
+    "question": "Implement a minimal EventEmitter class supporting on() and emit().",
+    "solution": "class EventEmitter {\n  constructor() {\n    this.listeners = {};\n  }\n\n  on(event, callback) {\n    (this.listeners[event] ??= []).push(callback);\n    return this;\n  }\n\n  emit(event, ...args) {\n    (this.listeners[event] || []).forEach((cb) => cb(...args));\n  }\n}\n\nconst emitter = new EventEmitter();\nemitter.on(\"greet\", (name) => console.log(`Hello, ${name}`));\nemitter.emit(\"greet\", \"Abhijit\"); // \"Hello, Abhijit\"",
+    "key_concept": "An event emitter maps event names to arrays of listener callbacks"
+  },
+  {
+    "id": 97,
+    "title": "Use Node's Built-in EventEmitter",
+    "category": "Events",
+    "difficulty": "Easy",
+    "question": "Use Node's events module to emit and listen for a custom 'orderPlaced' event.",
+    "solution": "const EventEmitter = require(\"events\");\n\nclass OrderService extends EventEmitter {}\nconst orders = new OrderService();\n\norders.on(\"orderPlaced\", (order) => {\n  console.log(`Processing order #${order.id}`);\n});\n\norders.emit(\"orderPlaced\", { id: 101 });",
+    "key_concept": "Extending EventEmitter is the idiomatic way to build event-driven Node classes"
+  },
+  {
+    "id": 98,
+    "title": "Read a Large File with Streams",
+    "category": "Streams",
+    "difficulty": "Medium",
+    "question": "Read a large file in chunks using a readable stream instead of loading it entirely into memory.",
+    "solution": "const fs = require(\"fs\");\n\nconst stream = fs.createReadStream(\"large-file.txt\", {\n  encoding: \"utf8\",\n  highWaterMark: 64 * 1024,\n});\n\nstream.on(\"data\", (chunk) => {\n  console.log(`Received ${chunk.length} characters`);\n});\n\nstream.on(\"end\", () => console.log(\"Done reading\"));\nstream.on(\"error\", (err) => console.error(err));",
+    "key_concept": "Streams process data in chunks, keeping memory usage constant regardless of file size"
+  },
+  {
+    "id": 99,
+    "title": "Pipe a Readable Stream to a Writable Stream",
+    "category": "Streams",
+    "difficulty": "Medium",
+    "question": "Copy a file by piping a readable stream directly into a writable stream.",
+    "solution": "const fs = require(\"fs\");\n\nfs.createReadStream(\"source.txt\")\n  .pipe(fs.createWriteStream(\"destination.txt\"))\n  .on(\"finish\", () => console.log(\"Copy complete\"));",
+    "key_concept": "pipe() manages backpressure automatically between readable and writable streams"
+  },
+  {
+    "id": 100,
+    "title": "Create a Custom Transform Stream",
+    "category": "Streams",
+    "difficulty": "Hard",
+    "question": "Create a Transform stream that uppercases text as it flows through the pipeline.",
+    "solution": "const { Transform } = require(\"stream\");\n\nclass UppercaseTransform extends Transform {\n  _transform(chunk, encoding, callback) {\n    this.push(chunk.toString().toUpperCase());\n    callback();\n  }\n}\n\nprocess.stdin.pipe(new UppercaseTransform()).pipe(process.stdout);",
+    "key_concept": "Transform streams implement _transform() to modify data mid-pipeline"
+  },
+  {
+    "id": 101,
+    "title": "Promisify a Callback-Based Function",
+    "category": "Async",
+    "difficulty": "Medium",
+    "question": "Convert Node's callback-based fs.readFile into a Promise-based function.",
+    "solution": "const fs = require(\"fs\");\nconst { promisify } = require(\"util\");\n\nconst readFileAsync = promisify(fs.readFile);\n\nasync function main() {\n  const data = await readFileAsync(\"data.txt\", \"utf8\");\n  console.log(data);\n}\n\nmain();",
+    "key_concept": "util.promisify wraps error-first callback functions into Promise-returning ones"
+  },
+  {
+    "id": 102,
+    "title": "Run CPU-Intensive Work Off the Main Thread",
+    "category": "Concurrency",
+    "difficulty": "Hard",
+    "question": "Offload a CPU-heavy calculation to a worker thread so it doesn't block the event loop.",
+    "solution": "// main.js\nconst { Worker } = require(\"worker_threads\");\n\nconst worker = new Worker(\"./worker.js\", { workerData: { n: 40 } });\nworker.on(\"message\", (result) => console.log(\"Fibonacci:\", result));\n\n// worker.js\nconst { workerData, parentPort } = require(\"worker_threads\");\n\nfunction fib(n) {\n  return n < 2 ? n : fib(n - 1) + fib(n - 2);\n}\nparentPort.postMessage(fib(workerData.n));",
+    "key_concept": "worker_threads run JS in parallel threads — ideal for CPU-bound work, unlike the async I/O the event loop is built for"
+  },
+  {
+    "id": 103,
+    "title": "Fork a Child Process",
+    "category": "Child Process",
+    "difficulty": "Medium",
+    "question": "Spawn a child process and exchange messages with it.",
+    "solution": "// parent.js\nconst { fork } = require(\"child_process\");\n\nconst child = fork(\"./child.js\");\nchild.send({ task: \"square\", value: 5 });\nchild.on(\"message\", (result) => console.log(\"Result:\", result));\n\n// child.js\nprocess.on(\"message\", ({ task, value }) => {\n  if (task === \"square\") process.send(value * value);\n});",
+    "key_concept": "fork() creates a new Node process with a built-in IPC channel for message passing"
+  },
+  {
+    "id": 104,
+    "title": "Hash a Password",
+    "category": "Security",
+    "difficulty": "Easy",
+    "question": "Securely hash a password using Node's built-in crypto module.",
+    "solution": "const crypto = require(\"crypto\");\n\nfunction hashPassword(password, salt = crypto.randomBytes(16).toString(\"hex\")) {\n  const hash = crypto.scryptSync(password, salt, 64).toString(\"hex\");\n  return { salt, hash };\n}\n\nconst { salt, hash } = hashPassword(\"myPassword123\");\nconsole.log({ salt, hash });",
+    "key_concept": "scrypt is a slow, memory-hard hash designed to resist brute-force attacks; always store a unique salt per password"
+  },
+  {
+    "id": 105,
+    "title": "Sign and Verify Data with HMAC",
+    "category": "Security",
+    "difficulty": "Medium",
+    "question": "Create a signed token using HMAC and verify it hasn't been tampered with.",
+    "solution": "const crypto = require(\"crypto\");\n\nconst SECRET = \"super-secret-key\";\n\nfunction sign(payload) {\n  const hmac = crypto.createHmac(\"sha256\", SECRET).update(payload).digest(\"hex\");\n  return `${payload}.${hmac}`;\n}\n\nfunction verify(token) {\n  const [payload, hmac] = token.split(\".\");\n  const expected = crypto.createHmac(\"sha256\", SECRET).update(payload).digest(\"hex\");\n  return hmac === expected;\n}\n\nconst token = sign(\"userId=42\");\nconsole.log(verify(token)); // true\nconsole.log(verify(token + \"tampered\")); // false",
+    "key_concept": "HMAC signatures let you detect tampering without encrypting the payload — the basis of how JWTs are signed"
+  },
+  {
+    "id": 106,
+    "title": "Simple In-Memory Rate Limiter",
+    "category": "Express",
+    "difficulty": "Medium",
+    "question": "Write Express middleware that limits each IP to 5 requests per 10 seconds.",
+    "solution": "const express = require(\"express\");\nconst app = express();\n\nconst hits = new Map();\nconst LIMIT = 5;\nconst WINDOW_MS = 10_000;\n\nfunction rateLimiter(req, res, next) {\n  const ip = req.ip;\n  const now = Date.now();\n  const record = hits.get(ip) || { count: 0, start: now };\n\n  if (now - record.start > WINDOW_MS) {\n    record.count = 0;\n    record.start = now;\n  }\n\n  record.count++;\n  hits.set(ip, record);\n\n  if (record.count > LIMIT) {\n    return res.status(429).send(\"Too many requests\");\n  }\n  next();\n}\n\napp.use(rateLimiter);\napp.get(\"/\", (req, res) => res.send(\"OK\"));\napp.listen(3000);",
+    "key_concept": "A fixed-window counter per key (IP) is the simplest rate-limiting strategy; production systems use Redis for shared state across instances"
+  },
+  {
+    "id": 107,
+    "title": "In-Memory Response Caching Middleware",
+    "category": "Express",
+    "difficulty": "Medium",
+    "question": "Cache GET responses in memory for 30 seconds to avoid recomputing expensive results.",
+    "solution": "const express = require(\"express\");\nconst app = express();\n\nconst cache = new Map();\nconst TTL_MS = 30_000;\n\nfunction cacheMiddleware(req, res, next) {\n  const key = req.originalUrl;\n  const cached = cache.get(key);\n\n  if (cached && Date.now() - cached.time < TTL_MS) {\n    return res.json(cached.data);\n  }\n\n  const originalJson = res.json.bind(res);\n  res.json = (data) => {\n    cache.set(key, { data, time: Date.now() });\n    originalJson(data);\n  };\n  next();\n}\n\napp.get(\"/expensive\", cacheMiddleware, (req, res) => {\n  res.json({ result: Math.random() });\n});\n\napp.listen(3000);",
+    "key_concept": "Wrapping res.json lets middleware intercept the response without changing the route handler"
+  }
+]

@@ -4,8 +4,8 @@
     "edition": "Expanded 2026 Edition",
     "author": "Abhijit Prakash Gawankar",
     "source": "Abhijit_Gawankar_Full_Fledged_Senior_Frontend_Interview_Handbook_2026(1).docx",
-    "questionCount": 568,
-    "partCount": 12
+    "questionCount": 584,
+    "partCount": 13
   },
   "parts": [
     {
@@ -3751,6 +3751,117 @@
               "question": "Why might a Docker health check fail while the process is running?",
               "answer": "The process may be alive but not ready, the health endpoint may be incorrect, the port may be wrong, dependencies may be unavailable or the check may run before startup completes.\nM13. Docker Interview Command Sheet\n# Build\ndocker build -t mpo-web:1.0.0 .\n\n# Run\ndocker run -d --name mpo-web -p 3000:3000 mpo-web:1.0.0\n\n# Inspect\ndocker ps\ndocker ps -a\ndocker images\ndocker inspect mpo-web\n\n# Logs\ndocker logs mpo-web\ndocker logs -f mpo-web\n\n# Shell\ndocker exec -it mpo-web sh\n\n# Stop/remove\ndocker stop mpo-web\ndocker rm mpo-web\n\n# Compose\ndocker compose up -d\ndocker compose ps\ndocker compose logs -f api\ndocker compose down\n\n# Rebuild\ndocker compose build --no-cache\ndocker compose up -d\nM14. Docker — 2-Minute Interview Answer\n“I use Docker to make application deployment reproducible. We define the runtime in a Dockerfile, build an image and run that image as a container. For local multi-service development, Compose can define services such as the API, frontend and database, including networking and persistent volumes. For production, CI runs tests and builds a versioned image, pushes it to a private registry, and the deployment environment pulls that exact artifact. Configuration and secrets are injected at runtime rather than baked into the image. After deployment, health checks and monitoring verify the new version, and because the previous image remains available we can roll back if necessary. The main things I pay attention to are reproducibility, image size, security, persistent data, networking, observability and rollback.”\nM15. Docker Questions Interviewers Use to Go Deeper\nWhy Docker instead of installing Node directly on the server?\nWhat happens internally when docker run executes?\nWhere is a container's filesystem stored?\nWhy does removing a container remove some data but not volume data?\nWhat happens when a container process receives SIGTERM?\nWhy should PID 1 behavior matter in containers?\nWhat is the difference between CMD and ENTRYPOINT in real deployments?\nHow do Docker layers affect cache invalidation?\nWhy should dependency installation happen before COPY . .?\nHow would you reduce a Node/Next.js image from 1GB to 150MB?\nHow would you securely pass a MongoDB password to a container?\nHow would you deploy 10 API containers behind a load balancer?\nHow do health checks interact with rolling deployment?\nHow do you roll back a bad image?\nHow do you identify which Git commit produced a running container?\nHow do you debug a memory leak inside a container?\nHow do CPU/memory limits affect Node.js?\nHow do you prevent one container from exhausting host resources?\nHow would you separate frontend, API and database containers?\nWould you run MongoDB in Docker in production? Explain the trade-off.\nHow would you handle database migrations during deployment?\nHow do you make a deployment backward-compatible when frontend and API versions overlap?\nHow do you monitor Dockerized Node.js applications?\nHow do you handle logs when containers are ephemeral?",
               "code": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "PART XV — HTML & CSS ESSENTIALS",
+      "sections": [
+        {
+          "title": "1. HTML — Key Interview Questions",
+          "questions": [
+            {
+              "id": "Q573.",
+              "question": "Why does semantic HTML matter?",
+              "answer": "Semantic tags describe meaning, not just appearance — screen readers, search engines, and other developers rely on that meaning. A layout built entirely from divs conveys no structure to assistive technology.",
+              "code": "<!-- Avoid -->\n<div class=\"header\">...</div>\n<div class=\"nav\">...</div>\n\n<!-- Prefer -->\n<header>...</header>\n<nav>...</nav>"
+            },
+            {
+              "id": "Q574.",
+              "question": "Block vs inline elements?",
+              "answer": "Block elements (div, p, section) start on a new line and take the full available width by default. Inline elements (span, a, strong) flow within text and only take up as much width as their content, and ignore width/height and vertical margin.",
+              "code": "<p>This is <span>inline</span> text.</p>\n<div>This is a block element.</div>"
+            },
+            {
+              "id": "Q575.",
+              "question": "<script> vs <script defer> vs <script async>?",
+              "answer": "A plain script tag blocks HTML parsing while it downloads and executes. defer downloads in parallel but waits to execute until parsing finishes, in document order. async downloads in parallel and executes as soon as it's ready, out of order — so it can run before parsing even finishes.",
+              "code": "<script src=\"a.js\"></script>         <!-- blocks parsing -->\n<script src=\"b.js\" defer></script>   <!-- runs after parsing, in order -->\n<script src=\"c.js\" async></script>   <!-- runs whenever ready, order not guaranteed -->"
+            },
+            {
+              "id": "Q576.",
+              "question": "What are data-* attributes used for?",
+              "answer": "Custom attributes for storing extra information directly on an element without inventing non-standard attributes. They're readable in JS via element.dataset and are commonly used to wire up behavior without polluting class names.",
+              "code": "<button data-user-id=\"42\">Delete</button>\n\n<script>\n  button.addEventListener(\"click\", (e) => {\n    console.log(e.target.dataset.userId); // \"42\"\n  });\n</script>"
+            },
+            {
+              "id": "Q577.",
+              "question": "id vs class — beyond just CSS selectors?",
+              "answer": "id must be unique per page and is used for in-page anchors, label 'for' targets, and ARIA references (aria-labelledby); class is reusable across many elements. In CSS specificity, one id outweighs any number of classes, which is why overusing IDs for styling makes overrides harder.",
+              "code": "<label for=\"email\">Email</label>\n<input id=\"email\" class=\"form-control\" />"
+            },
+            {
+              "id": "Q578.",
+              "question": "What does <!DOCTYPE html> actually do?",
+              "answer": "It tells the browser to render the page in standards mode rather than quirks mode. Without it (or with an old/incorrect doctype), browsers fall back to legacy rendering quirks — inconsistent box-model math, different default styles — kept for backward compatibility with very old pages.",
+              "code": "<!DOCTYPE html>\n<html lang=\"en\">\n  ...\n</html>"
+            },
+            {
+              "id": "Q579.",
+              "question": "<button> vs <a> for a clickable action?",
+              "answer": "Use <a href> for navigation to a URL — it supports right-click/open-in-new-tab and is keyboard-focusable by default. Use <button> for actions that don't navigate (submitting a form, opening a modal, toggling state). A div with an onClick loses the keyboard access, focus styling, and semantics these native elements provide for free.",
+              "code": "<a href=\"/pricing\">View pricing</a>\n<button type=\"button\" onclick=\"openModal()\">Open settings</button>"
+            },
+            {
+              "id": "Q580.",
+              "question": "What is ARIA and when do you need it?",
+              "answer": "ARIA (Accessible Rich Internet Applications) attributes add semantics HTML can't express on its own — roles, states, and properties for assistive tech. The first rule of ARIA is: don't use it if a native semantic element already does the job. Reach for it for custom widgets (a div-based tab panel, a custom dropdown) with no native HTML equivalent.",
+              "code": "<div role=\"tablist\">\n  <button role=\"tab\" aria-selected=\"true\">Tab 1</button>\n  <button role=\"tab\" aria-selected=\"false\">Tab 2</button>\n</div>"
+            }
+          ]
+        },
+        {
+          "title": "2. CSS — Key Interview Questions",
+          "questions": [
+            {
+              "id": "Q581.",
+              "question": "box-sizing: content-box vs border-box?",
+              "answer": "With the default content-box, width/height apply only to the content — padding and border add on top, so a 200px-wide box with 20px padding and a 1px border actually renders 242px wide. border-box includes padding and border inside the declared width, which is why most resets set box-sizing: border-box globally.",
+              "code": "* { box-sizing: border-box; }\n\n.card {\n  width: 200px;\n  padding: 20px;\n  border: 1px solid #ccc;\n} /* renders exactly 200px wide with border-box */"
+            },
+            {
+              "id": "Q582.",
+              "question": "How do you calculate CSS specificity?",
+              "answer": "Specificity is compared as (inline styles, IDs, classes/attributes/pseudo-classes, elements/pseudo-elements). #nav .link:hover scores (0,1,2,0) — one ID plus two class-level selectors — which beats nav a at (0,0,0,2). Equal specificity falls back to source order; !important overrides specificity entirely.",
+              "code": "#nav .link:hover { color: red; }   /* specificity: 0,1,2,0 — wins */\nnav a { color: blue; }              /* specificity: 0,0,0,2 */"
+            },
+            {
+              "id": "Q583.",
+              "question": "position: static vs relative vs absolute vs fixed vs sticky?",
+              "answer": "static is normal flow (default). relative shifts an element from its normal position without removing it from flow, and creates a positioning context for absolute children. absolute removes it from flow and positions it against the nearest positioned ancestor. fixed positions against the viewport, ignoring scroll. sticky toggles between relative and fixed based on scroll position within its container.",
+              "code": ".parent { position: relative; }\n.badge {\n  position: absolute;\n  top: 0;\n  right: 0;\n} /* positioned relative to .parent */\n\n.toolbar {\n  position: sticky;\n  top: 0;\n} /* sticks once it reaches the top of the viewport while scrolling */"
+            },
+            {
+              "id": "Q584.",
+              "question": "How do you center a box with Flexbox?",
+              "answer": "Set display: flex on the parent, then justify-content centers along the main axis and align-items centers along the cross axis. For a single child, this two-line combination is the standard way to both horizontally and vertically center.",
+              "code": ".container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n}"
+            },
+            {
+              "id": "Q585.",
+              "question": "Set up a simple two-column layout with CSS Grid?",
+              "answer": "grid-template-columns defines the column tracks. fr is a fraction of remaining space, so 1fr 2fr gives the second column twice the width of the first. gap adds spacing between tracks without needing margins.",
+              "code": ".layout {\n  display: grid;\n  grid-template-columns: 1fr 2fr;\n  gap: 16px;\n}"
+            },
+            {
+              "id": "Q586.",
+              "question": "What are CSS custom properties (variables)?",
+              "answer": "Custom properties (--name) are declared once and reused with var() — and unlike Sass variables, they're live in the DOM: readable/overridable at runtime (per theme, or via JS with element.style.setProperty), and they cascade and inherit like any other CSS property.",
+              "code": ":root { --brand: #356fe6; }\n\n.button {\n  background: var(--brand);\n  color: white;\n}\n\n[data-theme=\"dark\"] { --brand: #6ea8ff; } /* overridden per theme */"
+            },
+            {
+              "id": "Q587.",
+              "question": "display: none vs visibility: hidden vs opacity: 0?",
+              "answer": "display: none removes the element from layout entirely — no space reserved, not focusable, not read by screen readers. visibility: hidden keeps its layout space but hides it visually and from assistive tech; children can still override with visibility: visible. opacity: 0 keeps the element fully in layout and still interactive/focusable/clickable — it's only invisible.",
+              "code": ".a { display: none; }      /* gone, no space */\n.b { visibility: hidden; } /* invisible, space kept */\n.c { opacity: 0; }         /* invisible, space kept, still clickable */"
+            },
+            {
+              "id": "Q588.",
+              "question": "Pseudo-class vs pseudo-element?",
+              "answer": "A pseudo-class (single colon — :hover, :nth-child) selects an element based on a state or position. A pseudo-element (double colon — ::before, ::after) targets a sub-part of an element that doesn't exist in the markup, letting you insert generated content or style a fragment like the first line.",
+              "code": ".btn:hover { background: #eee; }\n\n.tooltip::before {\n  content: \"i\";\n  margin-right: 4px;\n}"
             }
           ]
         }
@@ -8301,6 +8412,134 @@
       "code": "function* idGenerator() {\n  let id = 1;\n  while (true) yield id++;\n}\nconst gen = idGenerator();\ngen.next().value; // 1\ngen.next().value; // 2",
       "part": "PART I — JAVASCRIPT",
       "section": "1. JavaScript Fundamentals"
+    },
+    {
+      "id": "Q573.",
+      "question": "Why does semantic HTML matter?",
+      "answer": "Semantic tags describe meaning, not just appearance — screen readers, search engines, and other developers rely on that meaning. A layout built entirely from divs conveys no structure to assistive technology.",
+      "code": "<!-- Avoid -->\n<div class=\"header\">...</div>\n<div class=\"nav\">...</div>\n\n<!-- Prefer -->\n<header>...</header>\n<nav>...</nav>",
+      "part": "PART XV — HTML & CSS ESSENTIALS",
+      "section": "1. HTML — Key Interview Questions"
+    },
+    {
+      "id": "Q574.",
+      "question": "Block vs inline elements?",
+      "answer": "Block elements (div, p, section) start on a new line and take the full available width by default. Inline elements (span, a, strong) flow within text and only take up as much width as their content, and ignore width/height and vertical margin.",
+      "code": "<p>This is <span>inline</span> text.</p>\n<div>This is a block element.</div>",
+      "part": "PART XV — HTML & CSS ESSENTIALS",
+      "section": "1. HTML — Key Interview Questions"
+    },
+    {
+      "id": "Q575.",
+      "question": "<script> vs <script defer> vs <script async>?",
+      "answer": "A plain script tag blocks HTML parsing while it downloads and executes. defer downloads in parallel but waits to execute until parsing finishes, in document order. async downloads in parallel and executes as soon as it's ready, out of order — so it can run before parsing even finishes.",
+      "code": "<script src=\"a.js\"></script>         <!-- blocks parsing -->\n<script src=\"b.js\" defer></script>   <!-- runs after parsing, in order -->\n<script src=\"c.js\" async></script>   <!-- runs whenever ready, order not guaranteed -->",
+      "part": "PART XV — HTML & CSS ESSENTIALS",
+      "section": "1. HTML — Key Interview Questions"
+    },
+    {
+      "id": "Q576.",
+      "question": "What are data-* attributes used for?",
+      "answer": "Custom attributes for storing extra information directly on an element without inventing non-standard attributes. They're readable in JS via element.dataset and are commonly used to wire up behavior without polluting class names.",
+      "code": "<button data-user-id=\"42\">Delete</button>\n\n<script>\n  button.addEventListener(\"click\", (e) => {\n    console.log(e.target.dataset.userId); // \"42\"\n  });\n</script>",
+      "part": "PART XV — HTML & CSS ESSENTIALS",
+      "section": "1. HTML — Key Interview Questions"
+    },
+    {
+      "id": "Q577.",
+      "question": "id vs class — beyond just CSS selectors?",
+      "answer": "id must be unique per page and is used for in-page anchors, label 'for' targets, and ARIA references (aria-labelledby); class is reusable across many elements. In CSS specificity, one id outweighs any number of classes, which is why overusing IDs for styling makes overrides harder.",
+      "code": "<label for=\"email\">Email</label>\n<input id=\"email\" class=\"form-control\" />",
+      "part": "PART XV — HTML & CSS ESSENTIALS",
+      "section": "1. HTML — Key Interview Questions"
+    },
+    {
+      "id": "Q578.",
+      "question": "What does <!DOCTYPE html> actually do?",
+      "answer": "It tells the browser to render the page in standards mode rather than quirks mode. Without it (or with an old/incorrect doctype), browsers fall back to legacy rendering quirks — inconsistent box-model math, different default styles — kept for backward compatibility with very old pages.",
+      "code": "<!DOCTYPE html>\n<html lang=\"en\">\n  ...\n</html>",
+      "part": "PART XV — HTML & CSS ESSENTIALS",
+      "section": "1. HTML — Key Interview Questions"
+    },
+    {
+      "id": "Q579.",
+      "question": "<button> vs <a> for a clickable action?",
+      "answer": "Use <a href> for navigation to a URL — it supports right-click/open-in-new-tab and is keyboard-focusable by default. Use <button> for actions that don't navigate (submitting a form, opening a modal, toggling state). A div with an onClick loses the keyboard access, focus styling, and semantics these native elements provide for free.",
+      "code": "<a href=\"/pricing\">View pricing</a>\n<button type=\"button\" onclick=\"openModal()\">Open settings</button>",
+      "part": "PART XV — HTML & CSS ESSENTIALS",
+      "section": "1. HTML — Key Interview Questions"
+    },
+    {
+      "id": "Q580.",
+      "question": "What is ARIA and when do you need it?",
+      "answer": "ARIA (Accessible Rich Internet Applications) attributes add semantics HTML can't express on its own — roles, states, and properties for assistive tech. The first rule of ARIA is: don't use it if a native semantic element already does the job. Reach for it for custom widgets (a div-based tab panel, a custom dropdown) with no native HTML equivalent.",
+      "code": "<div role=\"tablist\">\n  <button role=\"tab\" aria-selected=\"true\">Tab 1</button>\n  <button role=\"tab\" aria-selected=\"false\">Tab 2</button>\n</div>",
+      "part": "PART XV — HTML & CSS ESSENTIALS",
+      "section": "1. HTML — Key Interview Questions"
+    },
+    {
+      "id": "Q581.",
+      "question": "box-sizing: content-box vs border-box?",
+      "answer": "With the default content-box, width/height apply only to the content — padding and border add on top, so a 200px-wide box with 20px padding and a 1px border actually renders 242px wide. border-box includes padding and border inside the declared width, which is why most resets set box-sizing: border-box globally.",
+      "code": "* { box-sizing: border-box; }\n\n.card {\n  width: 200px;\n  padding: 20px;\n  border: 1px solid #ccc;\n} /* renders exactly 200px wide with border-box */",
+      "part": "PART XV — HTML & CSS ESSENTIALS",
+      "section": "2. CSS — Key Interview Questions"
+    },
+    {
+      "id": "Q582.",
+      "question": "How do you calculate CSS specificity?",
+      "answer": "Specificity is compared as (inline styles, IDs, classes/attributes/pseudo-classes, elements/pseudo-elements). #nav .link:hover scores (0,1,2,0) — one ID plus two class-level selectors — which beats nav a at (0,0,0,2). Equal specificity falls back to source order; !important overrides specificity entirely.",
+      "code": "#nav .link:hover { color: red; }   /* specificity: 0,1,2,0 — wins */\nnav a { color: blue; }              /* specificity: 0,0,0,2 */",
+      "part": "PART XV — HTML & CSS ESSENTIALS",
+      "section": "2. CSS — Key Interview Questions"
+    },
+    {
+      "id": "Q583.",
+      "question": "position: static vs relative vs absolute vs fixed vs sticky?",
+      "answer": "static is normal flow (default). relative shifts an element from its normal position without removing it from flow, and creates a positioning context for absolute children. absolute removes it from flow and positions it against the nearest positioned ancestor. fixed positions against the viewport, ignoring scroll. sticky toggles between relative and fixed based on scroll position within its container.",
+      "code": ".parent { position: relative; }\n.badge {\n  position: absolute;\n  top: 0;\n  right: 0;\n} /* positioned relative to .parent */\n\n.toolbar {\n  position: sticky;\n  top: 0;\n} /* sticks once it reaches the top of the viewport while scrolling */",
+      "part": "PART XV — HTML & CSS ESSENTIALS",
+      "section": "2. CSS — Key Interview Questions"
+    },
+    {
+      "id": "Q584.",
+      "question": "How do you center a box with Flexbox?",
+      "answer": "Set display: flex on the parent, then justify-content centers along the main axis and align-items centers along the cross axis. For a single child, this two-line combination is the standard way to both horizontally and vertically center.",
+      "code": ".container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n}",
+      "part": "PART XV — HTML & CSS ESSENTIALS",
+      "section": "2. CSS — Key Interview Questions"
+    },
+    {
+      "id": "Q585.",
+      "question": "Set up a simple two-column layout with CSS Grid?",
+      "answer": "grid-template-columns defines the column tracks. fr is a fraction of remaining space, so 1fr 2fr gives the second column twice the width of the first. gap adds spacing between tracks without needing margins.",
+      "code": ".layout {\n  display: grid;\n  grid-template-columns: 1fr 2fr;\n  gap: 16px;\n}",
+      "part": "PART XV — HTML & CSS ESSENTIALS",
+      "section": "2. CSS — Key Interview Questions"
+    },
+    {
+      "id": "Q586.",
+      "question": "What are CSS custom properties (variables)?",
+      "answer": "Custom properties (--name) are declared once and reused with var() — and unlike Sass variables, they're live in the DOM: readable/overridable at runtime (per theme, or via JS with element.style.setProperty), and they cascade and inherit like any other CSS property.",
+      "code": ":root { --brand: #356fe6; }\n\n.button {\n  background: var(--brand);\n  color: white;\n}\n\n[data-theme=\"dark\"] { --brand: #6ea8ff; } /* overridden per theme */",
+      "part": "PART XV — HTML & CSS ESSENTIALS",
+      "section": "2. CSS — Key Interview Questions"
+    },
+    {
+      "id": "Q587.",
+      "question": "display: none vs visibility: hidden vs opacity: 0?",
+      "answer": "display: none removes the element from layout entirely — no space reserved, not focusable, not read by screen readers. visibility: hidden keeps its layout space but hides it visually and from assistive tech; children can still override with visibility: visible. opacity: 0 keeps the element fully in layout and still interactive/focusable/clickable — it's only invisible.",
+      "code": ".a { display: none; }      /* gone, no space */\n.b { visibility: hidden; } /* invisible, space kept */\n.c { opacity: 0; }         /* invisible, space kept, still clickable */",
+      "part": "PART XV — HTML & CSS ESSENTIALS",
+      "section": "2. CSS — Key Interview Questions"
+    },
+    {
+      "id": "Q588.",
+      "question": "Pseudo-class vs pseudo-element?",
+      "answer": "A pseudo-class (single colon — :hover, :nth-child) selects an element based on a state or position. A pseudo-element (double colon — ::before, ::after) targets a sub-part of an element that doesn't exist in the markup, letting you insert generated content or style a fragment like the first line.",
+      "code": ".btn:hover { background: #eee; }\n\n.tooltip::before {\n  content: \"i\";\n  margin-right: 4px;\n}",
+      "part": "PART XV — HTML & CSS ESSENTIALS",
+      "section": "2. CSS — Key Interview Questions"
     }
   ]
 }
