@@ -1,8 +1,7 @@
-import React, { useMemo, useState } from "react";
-import { createRoot } from "react-dom/client";
+"use client";
+
+import { useMemo, useState } from "react";
 import {
-  ThemeProvider,
-  CssBaseline,
   Box,
   AppBar,
   Toolbar,
@@ -24,6 +23,7 @@ import {
   AccordionDetails,
   useMediaQuery,
 } from "@mui/material";
+import { ThemeProvider, CssBaseline, alpha } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
@@ -31,43 +31,57 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import CheckIcon from "@mui/icons-material/Check";
 import handbook from "./data/handbook.json";
+import codingParts from "./data/codingQuestions.js";
 import { buildTheme } from "./theme.js";
 
 const icons = ["⚡", "⚛", "▣", "◉", "⬢", "⌁", "🔐", "🏗", "🚀", "🧠", "💬", "⌘", "📅"];
 const DRAWER_WIDTH = 290;
 const stripPartPrefix = (t) => t.replace(/^PART\s+[IVXLCDM]+\s+—\s*/i, "");
 const stripSectionPrefix = (t) => t.replace(/^\d+\.\s*/, "").replace(/^[A-Z]\.\s*/, "");
+const allParts = [...handbook.parts, ...codingParts];
+const searchIndex = allParts.flatMap((p) =>
+  p.sections.flatMap((s) => s.questions.map((q) => ({ ...q, _part: p.title, _section: s.title })))
+);
+const itemKey = (item) => `${item._part}::${item._section}::${item.id}`;
 
-function App() {
-  const [selectedPart, setSelectedPart] = useState(handbook.parts[0]?.title || "");
+export default function Page() {
+  const [selectedPart, setSelectedPart] = useState(allParts[0]?.title || "");
   const [selectedSection, setSelectedSection] = useState("");
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(null);
-  const [mode, setMode] = useState("dark");
+  const [mode, setMode] = useState("light");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [copiedId, setCopiedId] = useState(null);
 
   const theme = useMemo(() => buildTheme(mode), [mode]);
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
-  const part = handbook.parts.find((p) => p.title === selectedPart) || handbook.parts[0];
+  const part = allParts.find((p) => p.title === selectedPart) || allParts[0];
   const sections = part?.sections || [];
   const activeSection = selectedSection
     ? sections.find((s) => s.title === selectedSection)
     : sections[0];
 
+  const isSearching = query.trim().length > 0;
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const list = activeSection?.questions || [];
-    if (!q) return list;
-    return list.filter((item) =>
-      `${item.id} ${item.question} ${item.answer} ${item.code}`.toLowerCase().includes(q)
+    if (q) {
+      return searchIndex.filter((item) =>
+        `${item.id} ${item.question} ${item.answer} ${item.code}`.toLowerCase().includes(q)
+      );
+    }
+    return searchIndex.filter(
+      (item) => item._part === part?.title && item._section === activeSection?.title
     );
-  }, [activeSection, query]);
+  }, [part, activeSection, query]);
 
   const selectPart = (title) => {
     setSelectedPart(title);
-    const next = handbook.parts.find((p) => p.title === title);
+    const next = allParts.find((p) => p.title === title);
     setSelectedSection(next?.sections?.[0]?.title || "");
     setOpen(null);
     if (!isDesktop) setMobileOpen(false);
@@ -81,8 +95,15 @@ function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const copyCode = (item) => {
+    const key = itemKey(item);
+    navigator.clipboard.writeText(item.code);
+    setCopiedId(key);
+    setTimeout(() => setCopiedId((id) => (id === key ? null : id)), 1500);
+  };
+
   const goHome = () => {
-    setSelectedPart(handbook.parts[0]?.title);
+    setSelectedPart(allParts[0]?.title);
     setSelectedSection("");
     setQuery("");
     if (!isDesktop) setMobileOpen(false);
@@ -104,7 +125,7 @@ function App() {
       </ListItemButton>
 
       <List sx={{ flexGrow: 1, overflowY: "auto" }} disablePadding>
-        {handbook.parts.map((p, i) => {
+        {allParts.map((p, i) => {
           const isActive = selectedPart === p.title;
           return (
             <Box key={p.title}>
@@ -288,43 +309,50 @@ function App() {
                 Handbook
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                {stripPartPrefix(selectedPart)}
+                {isSearching ? "Search" : stripPartPrefix(selectedPart)}
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                {activeSection?.title || "Overview"}
+                {isSearching ? `"${query.trim()}"` : activeSection?.title || "Overview"}
               </Typography>
             </Breadcrumbs>
 
             <Box sx={{ mb: 2 }}>
               <Typography variant="h5" sx={{ fontWeight: 750, fontSize: { xs: 19, sm: 21 } }}>
-                {activeSection?.title || "Questions"}
+                {isSearching ? "Search results" : activeSection?.title || "Questions"}
               </Typography>
               <Typography variant="caption" sx={{ color: "text.secondary" }}>
-                {filtered.length} questions shown{query ? ` for "${query}"` : ""}
+                {filtered.length} questions shown{isSearching ? ` for "${query.trim()}"` : ""}
               </Typography>
             </Box>
 
             <Box>
               {filtered.map((item) => (
                 <Accordion
-                  key={item.id}
+                  key={itemKey(item)}
                   disableGutters
                   elevation={0}
-                  expanded={open === item.id}
-                  onChange={() => setOpen(open === item.id ? null : item.id)}
+                  expanded={open === itemKey(item)}
+                  onChange={() => setOpen(open === itemKey(item) ? null : itemKey(item))}
                   sx={{ borderRadius: 2.5, mb: 1, "&:before": { display: "none" }, overflow: "hidden" }}
                 >
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon sx={{ color: "text.secondary" }} />}
                     sx={{ minHeight: 62, px: { xs: 1.5, sm: 2 } }}
                   >
-                      <Stack direction="row" spacing={1.5} sx={{ width: "100%", alignItems: "center" }}>
-                        <Typography sx={{ fontSize: 11, fontWeight: 800, color: "primary.main", minWidth: 34 }}>
-                          {item.id}
-                        </Typography>
-                        <Typography sx={{ fontSize: 14, fontWeight: 650, flexGrow: 1 }}>
-                          {item.question}
-                        </Typography>
+                      <Stack spacing={0.5} sx={{ width: "100%" }}>
+                        {isSearching && (
+                          <Typography sx={{ fontSize: 10.5, color: "text.secondary", fontWeight: 600 }}>
+                            {stripPartPrefix(item._part)} · {stripSectionPrefix(item._section)}
+                          </Typography>
+                        )}
+                        <Stack direction="row" spacing={1.5} sx={{ width: "100%", alignItems: "center" }}>
+                          <Typography sx={{ fontSize: 11, fontWeight: 800, color: "primary.main", minWidth: 34 }}>
+                            {item.id}
+                          </Typography>
+                          <Typography sx={{ fontSize: 14, fontWeight: 650, flexGrow: 1 }}>
+                            {item.question}
+                          </Typography>
+                        </Stack>
                       </Stack>
                     </AccordionSummary>
                     <AccordionDetails sx={{ px: { xs: 2, sm: 3.5 }, pb: 2.5, pt: 0 }}>
@@ -340,37 +368,46 @@ function App() {
                       {item.answer}
                     </Typography>
                     {item.code && (
-                      <Box
-                        component="pre"
-                        sx={{
-                          m: 0,
-                          mb: 1.5,
-                          p: 2,
-                          border: 1,
-                          borderColor: "divider",
-                          borderRadius: 2,
-                          bgcolor: (t) => t.custom.code,
-                          color: "#dbe7ff",
-                          fontSize: 12,
-                          lineHeight: 1.6,
-                          overflow: "auto",
-                        }}
-                      >
-                        <code>{item.code}</code>
+                      <Box sx={{ position: "relative", mb: 1 }}>
+                        <IconButton
+                          size="small"
+                          onClick={() => copyCode(item)}
+                          aria-label="Copy code"
+                          sx={{
+                            position: "absolute",
+                            top: 6,
+                            right: 6,
+                            color: "text.secondary",
+                            bgcolor: (t) => alpha(t.palette.background.paper, 0.6),
+                            "&:hover": { bgcolor: (t) => alpha(t.palette.background.paper, 0.9) },
+                          }}
+                        >
+                          {copiedId === itemKey(item) ? (
+                            <CheckIcon fontSize="inherit" sx={{ color: "success.main" }} />
+                          ) : (
+                            <ContentCopyIcon fontSize="inherit" />
+                          )}
+                        </IconButton>
+                        <Box
+                          component="pre"
+                          sx={{
+                            m: 0,
+                            p: 2,
+                            pr: 5,
+                            border: 1,
+                            borderColor: "divider",
+                            borderRadius: 2,
+                            bgcolor: (t) => t.custom.code,
+                            color: "#dbe7ff",
+                            fontSize: 12,
+                            lineHeight: 1.6,
+                            overflow: "auto",
+                          }}
+                        >
+                          <code>{item.code}</code>
+                        </Box>
                       </Box>
                     )}
-                    <Stack
-                      direction="row"
-                      spacing={1}
-                      sx={{ alignItems: "center", fontSize: 11, borderTop: 1, borderColor: "divider", pt: 1.5, color: "text.secondary" }}
-                    >
-                      <Typography variant="caption" sx={{ color: "primary.main", fontWeight: 700 }}>
-                        Interview tip
-                      </Typography>
-                      <Typography variant="caption">
-                        Explain the "why", not only the definition.
-                      </Typography>
-                    </Stack>
                   </AccordionDetails>
                 </Accordion>
               ))}
@@ -395,5 +432,3 @@ function App() {
     </ThemeProvider>
   );
 }
-
-createRoot(document.getElementById("root")).render(<App />);

@@ -1,0 +1,961 @@
+{
+  "title": "Master JavaScript + React.js Interview Coding Programs",
+  "version": "2.0",
+  "audience": "Senior JavaScript / React Developer Interview Preparation",
+  "focus": "Programming questions only, with examples, complete solutions, explanations, and interview tips.",
+  "total_questions": 85,
+  "sections": {
+    "javascript": {
+      "question_count": 50,
+      "questions": [
+        {
+          "id": 1,
+          "title": "Reverse a String",
+          "category": "Strings",
+          "difficulty": "Easy",
+          "question": "Reverse the string 'hello' so the output is 'olleh'.",
+          "solution": "function reverseString(str) {\n  return str.split(\"\").reverse().join(\"\");\n}\n\nconsole.log(reverseString(\"hello\")); // \"olleh\" ",
+          "key_concept": "String manipulation"
+        },
+        {
+          "id": 2,
+          "title": "Check Palindrome",
+          "category": "Strings",
+          "difficulty": "Easy",
+          "question": "Check whether a string reads the same forward and backward. Example: 'madam' => true.",
+          "solution": "function isPalindrome(str) {\n  let left = 0;\n  let right = str.length - 1;\n\n  while (left < right) {\n    if (str[left] !== str[right]) return false;\n    left++;\n    right--;\n  }\n\n  return true;\n}\n\nconsole.log(isPalindrome(\"madam\")); // true\nconsole.log(isPalindrome(\"hello\")); // false",
+          "key_concept": "Two pointers"
+        },
+        {
+          "id": 3,
+          "title": "Find Largest Number",
+          "category": "Arrays",
+          "difficulty": "Easy",
+          "question": "Find the largest number in [10, 5, 30, 8, 20].",
+          "solution": "function findLargest(arr) {\n  let largest = arr[0];\n\n  for (let i = 1; i < arr.length; i++) {\n    if (arr[i] > largest) largest = arr[i];\n  }\n\n  return largest;\n}\n\nconsole.log(findLargest([10, 5, 30, 8, 20])); // 30",
+          "key_concept": "Array traversal"
+        },
+        {
+          "id": 4,
+          "title": "Find Second Largest Number",
+          "category": "Arrays",
+          "difficulty": "Medium",
+          "question": "Find the second largest distinct number in [10, 5, 30, 8, 20].",
+          "solution": "function secondLargest(arr) {\n  let largest = -Infinity;\n  let second = -Infinity;\n\n  for (const num of arr) {\n    if (num > largest) {\n      second = largest;\n      largest = num;\n    } else if (num > second && num !== largest) {\n      second = num;\n    }\n  }\n\n  return second;\n}\n\nconsole.log(secondLargest([10, 5, 30, 8, 20])); // 20",
+          "key_concept": "One-pass algorithm; O(n)"
+        },
+        {
+          "id": 5,
+          "title": "Remove Duplicates",
+          "category": "Arrays",
+          "difficulty": "Easy",
+          "question": "Remove duplicate values from [1, 2, 2, 3, 4, 4].",
+          "solution": "function removeDuplicates(arr) {\n  return [...new Set(arr)];\n}\n\nconsole.log(removeDuplicates([1, 2, 2, 3, 4, 4]));\n// [1, 2, 3, 4]",
+          "key_concept": "Set"
+        },
+        {
+          "id": 6,
+          "title": "Find Duplicate Values",
+          "category": "Arrays",
+          "difficulty": "Medium",
+          "question": "Find values occurring more than once in [1, 2, 3, 2, 4, 3].",
+          "solution": "function findDuplicates(arr) {\n  const frequency = {};\n  const duplicates = [];\n\n  for (const num of arr) {\n    frequency[num] = (frequency[num] || 0) + 1;\n  }\n\n  for (const num in frequency) {\n    if (frequency[num] > 1) {\n      duplicates.push(Number(num));\n    }\n  }\n\n  return duplicates;\n}\n\nconsole.log(findDuplicates([1, 2, 3, 2, 4, 3]));\n// [2, 3]",
+          "key_concept": "Frequency counting"
+        },
+        {
+          "id": 7,
+          "title": "Character Frequency",
+          "category": "Strings",
+          "difficulty": "Easy",
+          "question": "Count how many times each character appears in a string such as 'hello'.",
+          "solution": "function charFrequency(str) {\n  const result = {};\n\n  for (const char of str) {\n    result[char] = (result[char] || 0) + 1;\n  }\n\n  return result;\n}\n\nconsole.log(charFrequency(\"hello\"));\n// { h: 1, e: 1, l: 2, o: 1 }",
+          "key_concept": "Frequency counting"
+        },
+        {
+          "id": 8,
+          "title": "Word Frequency",
+          "category": "Strings",
+          "difficulty": "Easy",
+          "question": "Count the frequency of each word in 'hello world hello'.",
+          "solution": "function wordFrequency(str) {\n  const result = {};\n  const words = str.split(\" \");\n\n  for (const word of words) {\n    result[word] = (result[word] || 0) + 1;\n  }\n\n  return result;\n}\n\nconsole.log(wordFrequency(\"hello world hello\"));\n// { hello: 2, world: 1 }",
+          "key_concept": "String splitting and frequency counting"
+        },
+        {
+          "id": 9,
+          "title": "Find Missing Number",
+          "category": "Arrays",
+          "difficulty": "Easy",
+          "question": "Find the missing number from [1, 2, 3, 5, 6], assuming numbers should be 1 through 6.",
+          "solution": "function findMissing(arr) {\n  const n = arr.length + 1;\n  const expected = (n * (n + 1)) / 2;\n  const actual = arr.reduce((sum, num) => sum + num, 0);\n\n  return expected - actual;\n}\n\nconsole.log(findMissing([1, 2, 3, 5, 6])); // 4",
+          "key_concept": "Arithmetic series"
+        },
+        {
+          "id": 10,
+          "title": "Two Sum",
+          "category": "Arrays",
+          "difficulty": "Medium",
+          "question": "Return the indices of two numbers whose sum equals the target. Example: [2,7,11,15], target 9 => [0,1].",
+          "solution": "function twoSum(arr, target) {\n  const map = new Map();\n\n  for (let i = 0; i < arr.length; i++) {\n    const complement = target - arr[i];\n\n    if (map.has(complement)) {\n      return [map.get(complement), i];\n    }\n\n    map.set(arr[i], i);\n  }\n\n  return [];\n}\n\nconsole.log(twoSum([2, 7, 11, 15], 9)); // [0, 1]",
+          "key_concept": "Hash map; O(n)"
+        },
+        {
+          "id": 11,
+          "title": "Move Zeros to End",
+          "category": "Arrays",
+          "difficulty": "Medium",
+          "question": "Move all zeros to the end while preserving the order of non-zero values. Example: [0,1,0,3,12] => [1,3,12,0,0].",
+          "solution": "function moveZeros(arr) {\n  let index = 0;\n\n  for (const num of arr) {\n    if (num !== 0) {\n      arr[index] = num;\n      index++;\n    }\n  }\n\n  while (index < arr.length) {\n    arr[index] = 0;\n    index++;\n  }\n\n  return arr;\n}\n\nconsole.log(moveZeros([0, 1, 0, 3, 12]));\n// [1, 3, 12, 0, 0]",
+          "key_concept": "In-place array manipulation"
+        },
+        {
+          "id": 12,
+          "title": "Intersection of Two Arrays",
+          "category": "Arrays",
+          "difficulty": "Easy",
+          "question": "Find common values between [1,2,3,4] and [3,4,5,6].",
+          "solution": "function intersection(arr1, arr2) {\n  const set = new Set(arr2);\n  return arr1.filter(item => set.has(item));\n}\n\nconsole.log(intersection([1, 2, 3, 4], [3, 4, 5, 6]));\n// [3, 4]",
+          "key_concept": "Set lookup"
+        },
+        {
+          "id": 13,
+          "title": "Union of Two Arrays",
+          "category": "Arrays",
+          "difficulty": "Easy",
+          "question": "Return unique values from both arrays. Example: [1,2,3] and [2,3,4] => [1,2,3,4].",
+          "solution": "function union(arr1, arr2) {\n  return [...new Set([...arr1, ...arr2])];\n}\n\nconsole.log(union([1, 2, 3], [2, 3, 4]));\n// [1, 2, 3, 4]",
+          "key_concept": "Set and spread"
+        },
+        {
+          "id": 14,
+          "title": "Flatten Nested Array",
+          "category": "Arrays",
+          "difficulty": "Medium",
+          "question": "Flatten [1, [2, [3, [4]]]] without using Array.prototype.flat().",
+          "solution": "function flatten(arr) {\n  const result = [];\n\n  for (const item of arr) {\n    if (Array.isArray(item)) {\n      result.push(...flatten(item));\n    } else {\n      result.push(item);\n    }\n  }\n\n  return result;\n}\n\nconsole.log(flatten([1, [2, [3, [4]]]]));\n// [1, 2, 3, 4]",
+          "key_concept": "Recursion"
+        },
+        {
+          "id": 15,
+          "title": "Maximum Occurring Element",
+          "category": "Arrays",
+          "difficulty": "Medium",
+          "question": "Find the element occurring most frequently in [1,3,2,3,4,3,2].",
+          "solution": "function maxOccurrence(arr) {\n  const frequency = {};\n  let max = 0;\n  let result = null;\n\n  for (const num of arr) {\n    frequency[num] = (frequency[num] || 0) + 1;\n\n    if (frequency[num] > max) {\n      max = frequency[num];\n      result = num;\n    }\n  }\n\n  return result;\n}\n\nconsole.log(maxOccurrence([1, 3, 2, 3, 4, 3, 2]));\n// 3",
+          "key_concept": "Frequency counting"
+        },
+        {
+          "id": 16,
+          "title": "Group Objects by Property",
+          "category": "Objects",
+          "difficulty": "Medium",
+          "question": "Group users by department.",
+          "input": "[\n  { name: \"A\", department: \"IT\" },\n  { name: \"B\", department: \"HR\" },\n  { name: \"C\", department: \"IT\" }\n]",
+          "solution": "const result = users.reduce((acc, user) => {\n  const key = user.department;\n\n  if (!acc[key]) {\n    acc[key] = [];\n  }\n\n  acc[key].push(user);\n  return acc;\n}, {});\n\nconsole.log(result);",
+          "key_concept": "reduce"
+        },
+        {
+          "id": 17,
+          "title": "Sort Objects by Age",
+          "category": "Objects",
+          "difficulty": "Easy",
+          "question": "Sort an array of user objects by age in ascending order.",
+          "input": "[\n  { name: \"A\", age: 35 },\n  { name: \"B\", age: 25 },\n  { name: \"C\", age: 30 }\n]",
+          "solution": "const result = users.sort((a, b) => a.age - b.age);\n\nconsole.log(result);",
+          "key_concept": "Array sort comparator"
+        },
+        {
+          "id": 18,
+          "title": "Implement map()",
+          "category": "JavaScript Internals",
+          "difficulty": "Medium",
+          "question": "Implement a custom Array.prototype.myMap().",
+          "solution": "Array.prototype.myMap = function(callback) {\n  const result = [];\n\n  for (let i = 0; i < this.length; i++) {\n    result.push(callback(this[i], i, this));\n  }\n\n  return result;\n};\n\nconsole.log([1, 2, 3].myMap(x => x * 2));\n// [2, 4, 6]",
+          "key_concept": "Array prototype and callbacks"
+        },
+        {
+          "id": 19,
+          "title": "Implement filter()",
+          "category": "JavaScript Internals",
+          "difficulty": "Medium",
+          "question": "Implement a custom Array.prototype.myFilter().",
+          "solution": "Array.prototype.myFilter = function(callback) {\n  const result = [];\n\n  for (let i = 0; i < this.length; i++) {\n    if (callback(this[i], i, this)) {\n      result.push(this[i]);\n    }\n  }\n\n  return result;\n};\n\nconsole.log([1, 2, 3, 4].myFilter(x => x > 2));\n// [3, 4]",
+          "key_concept": "Array prototype and callbacks"
+        },
+        {
+          "id": 20,
+          "title": "Implement reduce()",
+          "category": "JavaScript Internals",
+          "difficulty": "Hard",
+          "question": "Implement a custom Array.prototype.myReduce() supporting an optional initial value.",
+          "solution": "Array.prototype.myReduce = function(callback, initialValue) {\n  let accumulator = initialValue;\n  let startIndex = 0;\n\n  if (accumulator === undefined) {\n    accumulator = this[0];\n    startIndex = 1;\n  }\n\n  for (let i = startIndex; i < this.length; i++) {\n    accumulator = callback(\n      accumulator,\n      this[i],\n      i,\n      this\n    );\n  }\n\n  return accumulator;\n};\n\nconsole.log(\n  [1, 2, 3, 4].myReduce((sum, num) => sum + num, 0)\n);\n// 10",
+          "key_concept": "Reduce accumulator"
+        },
+        {
+          "id": 21,
+          "title": "Debounce",
+          "category": "JavaScript / React",
+          "difficulty": "Medium",
+          "question": "Implement debounce(fn, delay) so only the final call runs after the caller stops invoking the function for the delay period.",
+          "solution": "function debounce(fn, delay) {\n  let timer;\n\n  return function(...args) {\n    clearTimeout(timer);\n\n    timer = setTimeout(() => {\n      fn.apply(this, args);\n    }, delay);\n  };\n}\n\nconst search = debounce(value => {\n  console.log(\"API Call:\", value);\n}, 500);",
+          "key_concept": "Closures, timers, this, rest parameters"
+        },
+        {
+          "id": 22,
+          "title": "Throttle",
+          "category": "JavaScript / React",
+          "difficulty": "Medium",
+          "question": "Implement throttle(fn, delay) so the function executes at most once per delay interval.",
+          "solution": "function throttle(fn, delay) {\n  let lastCall = 0;\n\n  return function(...args) {\n    const now = Date.now();\n\n    if (now - lastCall >= delay) {\n      lastCall = now;\n      fn.apply(this, args);\n    }\n  };\n}",
+          "key_concept": "Closures and rate limiting"
+        },
+        {
+          "id": 23,
+          "title": "Deep Clone",
+          "category": "JavaScript Internals",
+          "difficulty": "Medium",
+          "question": "Create a true independent copy of a nested object so changes to nested properties in the copy do not affect the original.",
+          "solution": "const user = {\n  name: \"Ram\",\n  address: {\n    city: \"Pune\"\n  }\n};\n\nconst copy = structuredClone(user);\n\ncopy.address.city = \"Mumbai\";\n\nconsole.log(user.address.city); // \"Pune\"\nconsole.log(copy.address.city); // \"Mumbai\" ",
+          "key_concept": "Deep vs shallow copy"
+        },
+        {
+          "id": 24,
+          "title": "Memoization",
+          "category": "JavaScript Internals",
+          "difficulty": "Medium",
+          "question": "Implement memoize(fn) so repeated calls with the same arguments return a cached result.",
+          "solution": "function memoize(fn) {\n  const cache = new Map();\n\n  return function(...args) {\n    const key = JSON.stringify(args);\n\n    if (cache.has(key)) {\n      return cache.get(key);\n    }\n\n    const result = fn(...args);\n    cache.set(key, result);\n\n    return result;\n  };\n}\n\nconst add = memoize((a, b) => {\n  console.log(\"Calculating...\");\n  return a + b;\n});\n\nconsole.log(add(2, 3));\nconsole.log(add(2, 3));",
+          "key_concept": "Closure and caching"
+        },
+        {
+          "id": 25,
+          "title": "Currying",
+          "category": "JavaScript Internals",
+          "difficulty": "Hard",
+          "question": "Convert add(a,b,c) into a curried function supporting curriedAdd(1)(2)(3), curriedAdd(1,2)(3), and curriedAdd(1)(2,3).",
+          "solution": "function curry(fn) {\n  return function curried(...args) {\n    if (args.length >= fn.length) {\n      return fn(...args);\n    }\n\n    return function(...nextArgs) {\n      return curried(...args, ...nextArgs);\n    };\n  };\n}\n\nconst add = (a, b, c) => a + b + c;\nconst curriedAdd = curry(add);\n\nconsole.log(curriedAdd(1)(2)(3));   // 6\nconsole.log(curriedAdd(1, 2)(3));   // 6\nconsole.log(curriedAdd(1)(2, 3));   // 6",
+          "key_concept": "Closures and partial application"
+        },
+        {
+          "id": 26,
+          "title": "Closure Counter",
+          "category": "Closures",
+          "difficulty": "Easy",
+          "question": "Create a counter whose private count persists across calls.",
+          "solution": "function counter() {\n  let count = 0;\n\n  return function() {\n    count++;\n    return count;\n  };\n}\n\nconst c = counter();\n\nconsole.log(c()); // 1\nconsole.log(c()); // 2\nconsole.log(c()); // 3",
+          "key_concept": "Closure and private state"
+        },
+        {
+          "id": 27,
+          "title": "Fix var + setTimeout Closure",
+          "category": "Closures",
+          "difficulty": "Medium",
+          "question": "Fix the loop so it prints 0, 1, 2 instead of 3, 3, 3.",
+          "solution": "// Solution 1: let\nfor (let i = 0; i < 3; i++) {\n  setTimeout(() => {\n    console.log(i);\n  }, 1000);\n}\n\n// Solution 2: IIFE closure\nfor (var i = 0; i < 3; i++) {\n  (function(i) {\n    setTimeout(() => {\n      console.log(i);\n    }, 1000);\n  })(i);\n}\n\n// Solution 3: setTimeout argument\nfor (var i = 0; i < 3; i++) {\n  setTimeout(i => {\n    console.log(i);\n  }, 1000, i);\n}",
+          "key_concept": "var scope, let block scope, closures"
+        },
+        {
+          "id": 28,
+          "title": "Event Loop Output",
+          "category": "Async JavaScript",
+          "difficulty": "Medium",
+          "question": "Predict the output and explain the order of synchronous code, Promise microtasks, and setTimeout macrotasks.",
+          "solution": "console.log(\"A\");\n\nsetTimeout(() => {\n  console.log(\"B\");\n}, 0);\n\nPromise.resolve().then(() => {\n  console.log(\"C\");\n});\n\nconsole.log(\"D\");\n\n// Output:\n// A\n// D\n// C\n// B",
+          "key_concept": "Event loop, microtasks, macrotasks"
+        },
+        {
+          "id": 29,
+          "title": "Promise.all Polyfill",
+          "category": "Async JavaScript",
+          "difficulty": "Hard",
+          "question": "Implement a simplified Promise.all that preserves input order and rejects if any input rejects.",
+          "solution": "function promiseAll(promises) {\n  return new Promise((resolve, reject) => {\n    const results = [];\n    let completed = 0;\n\n    if (promises.length === 0) {\n      resolve([]);\n      return;\n    }\n\n    promises.forEach((promise, index) => {\n      Promise.resolve(promise)\n        .then(result => {\n          results[index] = result;\n          completed++;\n\n          if (completed === promises.length) {\n            resolve(results);\n          }\n        })\n        .catch(reject);\n    });\n  });\n}\n\npromiseAll([\n  Promise.resolve(10),\n  Promise.resolve(20),\n  Promise.resolve(30)\n]).then(console.log);\n// [10, 20, 30]",
+          "key_concept": "Promises, ordering, rejection"
+        },
+        {
+          "id": 30,
+          "title": "Query String to Object",
+          "category": "Objects",
+          "difficulty": "Easy",
+          "question": "Convert 'name=Ram&age=30&city=Pune' into an object.",
+          "solution": "function queryToObject(query) {\n  return Object.fromEntries(\n    query.split(\"&\").map(item => item.split(\"=\"))\n  );\n}\n\nconsole.log(queryToObject(\"name=Ram&age=30&city=Pune\"));\n// { name: \"Ram\", age: \"30\", city: \"Pune\" }",
+          "key_concept": "Object.fromEntries and string parsing"
+        },
+        {
+          "id": 31,
+          "title": "Object to Query String",
+          "category": "Objects",
+          "difficulty": "Easy",
+          "question": "Convert {name:'Ram', age:30, city:'Pune'} into 'name=Ram&age=30&city=Pune'.",
+          "solution": "function objectToQuery(obj) {\n  return Object.entries(obj)\n    .map(([key, value]) => `${key}=${value}`)\n    .join(\"&\");\n}\n\nconsole.log(objectToQuery({\n  name: \"Ram\",\n  age: 30,\n  city: \"Pune\"\n}));\n// name=Ram&age=30&city=Pune",
+          "key_concept": "Object.entries and string building"
+        },
+        {
+          "id": 32,
+          "title": "Flatten Object",
+          "category": "Objects",
+          "difficulty": "Hard",
+          "question": "Flatten nested object keys using dot notation. Example: user.address.city => 'user.address.city'.",
+          "solution": "function flattenObject(obj, parent = \"\", result = {}) {\n  for (const key in obj) {\n    const newKey = parent ? `${parent}.${key}` : key;\n\n    if (\n      typeof obj[key] === \"object\" &&\n      obj[key] !== null &&\n      !Array.isArray(obj[key])\n    ) {\n      flattenObject(obj[key], newKey, result);\n    } else {\n      result[newKey] = obj[key];\n    }\n  }\n\n  return result;\n}\n\nconst obj = {\n  user: {\n    name: \"Ram\",\n    address: {\n      city: \"Pune\"\n    }\n  }\n};\n\nconsole.log(flattenObject(obj));\n// {\n//   \"user.name\": \"Ram\",\n//   \"user.address.city\": \"Pune\"\n// }",
+          "key_concept": "Recursion and nested objects"
+        },
+        {
+          "id": 33,
+          "title": "Remove Property Without Mutation",
+          "category": "Objects",
+          "difficulty": "Easy",
+          "question": "Remove password from an object without changing the original object.",
+          "solution": "const user = {\n  name: \"Ram\",\n  age: 30,\n  password: \"123\"\n};\n\nconst { password, ...result } = user;\n\nconsole.log(result);\n// { name: \"Ram\", age: 30 }\n\nconsole.log(user);\n// original object still contains password",
+          "key_concept": "Destructuring and rest"
+        },
+        {
+          "id": 34,
+          "title": "Find Longest Word",
+          "category": "Strings",
+          "difficulty": "Easy",
+          "question": "Find the longest word in 'JavaScript is powerful language'.",
+          "solution": "function longestWord(sentence) {\n  const words = sentence.split(\" \");\n  let longest = \"\";\n\n  for (const word of words) {\n    if (word.length > longest.length) {\n      longest = word;\n    }\n  }\n\n  return longest;\n}\n\nconsole.log(longestWord(\"JavaScript is powerful language\"));\n// JavaScript",
+          "key_concept": "String and array traversal"
+        },
+        {
+          "id": 35,
+          "title": "useDebounce Hook",
+          "category": "React",
+          "difficulty": "Medium",
+          "question": "Create a React useDebounce hook that returns a value only after it has remained unchanged for the specified delay.",
+          "solution": "import { useEffect, useState } from \"react\";\n\nfunction useDebounce(value, delay) {\n  const [debouncedValue, setDebouncedValue] = useState(value);\n\n  useEffect(() => {\n    const timer = setTimeout(() => {\n      setDebouncedValue(value);\n    }, delay);\n\n    return () => clearTimeout(timer);\n  }, [value, delay]);\n\n  return debouncedValue;\n}",
+          "key_concept": "useEffect cleanup and debouncing"
+        },
+        {
+          "id": 36,
+          "title": "usePrevious Hook",
+          "category": "React",
+          "difficulty": "Medium",
+          "question": "Create a hook that returns the previous render's value.",
+          "solution": "import { useEffect, useRef } from \"react\";\n\nfunction usePrevious(value) {\n  const ref = useRef();\n\n  useEffect(() => {\n    ref.current = value;\n  }, [value]);\n\n  return ref.current;\n}",
+          "key_concept": "useRef and render lifecycle"
+        },
+        {
+          "id": 37,
+          "title": "Search with Debounce",
+          "category": "React",
+          "difficulty": "Medium",
+          "question": "Build a search flow where typing waits 500ms before making the API request.",
+          "solution": "function debounce(fn, delay) {\n  let timer;\n\n  return (...args) => {\n    clearTimeout(timer);\n\n    timer = setTimeout(() => {\n      fn(...args);\n    }, delay);\n  };\n}\n\n// Example usage:\nconst search = debounce(async value => {\n  const response = await fetch(`/api/search?q=${encodeURIComponent(value)}`);\n  const data = await response.json();\n  console.log(data);\n}, 500);",
+          "key_concept": "Debounce and API calls"
+        },
+        {
+          "id": 38,
+          "title": "Pagination",
+          "category": "React",
+          "difficulty": "Medium",
+          "question": "Implement pagination state with page, page size, loading, error handling, Previous, Next, and numbered pages.",
+          "solution": "const [page, setPage] = useState(1);\nconst [pageSize, setPageSize] = useState(10);\nconst [loading, setLoading] = useState(false);\nconst [error, setError] = useState(null);\n\nuseEffect(() => {\n  async function loadData() {\n    try {\n      setLoading(true);\n      setError(null);\n\n      const response = await fetch(\n        `/api/users?page=${page}&pageSize=${pageSize}`\n      );\n\n      if (!response.ok) {\n        throw new Error(\"Failed to load users\");\n      }\n\n      const data = await response.json();\n      // setUsers(data.items);\n      // setTotal(data.total);\n    } catch (err) {\n      setError(err.message);\n    } finally {\n      setLoading(false);\n    }\n  }\n\n  loadData();\n}, [page, pageSize]);\n\n// Previous:\n// setPage(p => Math.max(1, p - 1));\n\n// Next:\n// setPage(p => Math.min(totalPages, p + 1));",
+          "key_concept": "React state, effects, API state"
+        },
+        {
+          "id": 39,
+          "title": "Autocomplete with Keyboard Navigation",
+          "category": "React",
+          "difficulty": "Hard",
+          "question": "Build an autocomplete flow: input -> debounce -> API -> suggestions -> keyboard navigation.",
+          "solution": "// Core approach:\n// 1. Store input value.\n// 2. Debounce the input.\n// 3. Fetch suggestions when debounced value changes.\n// 4. Track highlighted suggestion with an index.\n// 5. Handle ArrowUp, ArrowDown, Enter, and Escape.\n\n// Example state:\nconst [query, setQuery] = useState(\"\");\nconst [suggestions, setSuggestions] = useState([]);\nconst [highlightedIndex, setHighlightedIndex] = useState(-1);\n\n// Use a useDebounce hook for query, then fetch suggestions\n// inside useEffect whenever debouncedQuery changes.",
+          "key_concept": "Debounce, async effects, keyboard events"
+        },
+        {
+          "id": 40,
+          "title": "Infinite Scroll",
+          "category": "React",
+          "difficulty": "Hard",
+          "question": "Implement infinite scrolling using IntersectionObserver instead of continuously listening to the scroll event.",
+          "solution": "const observerRef = useRef(null);\n\nuseEffect(() => {\n  const target = observerRef.current;\n  if (!target) return;\n\n  const observer = new IntersectionObserver(entries => {\n    if (entries[0].isIntersecting && !loading && hasMore) {\n      loadNextPage();\n    }\n  });\n\n  observer.observe(target);\n\n  return () => observer.disconnect();\n}, [loading, hasMore]);\n\n// Render a small sentinel element at the bottom:\n// <div ref={observerRef} />",
+          "key_concept": "IntersectionObserver and pagination"
+        },
+        {
+          "id": 41,
+          "title": "Closure Output",
+          "category": "JavaScript Output",
+          "difficulty": "Easy",
+          "question": "Predict the output of a function that declares var x outside and inside another function.",
+          "solution": "var x = 10;\n\nfunction test() {\n  console.log(x);\n  var x = 20;\n}\n\ntest();\n\n// Output:\n// undefined\n\n// Reason:\n// var x inside test is hoisted to the top of test,\n// so the console.log sees the local x before assignment.",
+          "key_concept": "Hoisting"
+        },
+        {
+          "id": 42,
+          "title": "Temporal Dead Zone",
+          "category": "JavaScript Output",
+          "difficulty": "Easy",
+          "question": "Explain what happens when accessing a let variable before its declaration.",
+          "solution": "console.log(a);\nlet a = 10;\n\n// Result:\n// ReferenceError\n\n// Reason:\n// let declarations are hoisted but remain in the\n// Temporal Dead Zone until execution reaches the declaration.",
+          "key_concept": "TDZ and let"
+        },
+        {
+          "id": 43,
+          "title": "typeof Questions",
+          "category": "JavaScript Output",
+          "difficulty": "Easy",
+          "question": "Predict the results of typeof null, typeof undefined, typeof [], and typeof {}.",
+          "solution": "console.log(typeof null);       // \"object\"\nconsole.log(typeof undefined);  // \"undefined\"\nconsole.log(typeof []);         // \"object\"\nconsole.log(typeof {});         // \"object\"\n\n// typeof null === \"object\" is a historical JavaScript quirk.\n// Use Array.isArray(value) to identify arrays.",
+          "key_concept": "typeof and JavaScript quirks"
+        },
+        {
+          "id": 44,
+          "title": "== vs ===",
+          "category": "JavaScript Output",
+          "difficulty": "Easy",
+          "question": "Explain the results of loose equality versus strict equality.",
+          "solution": "console.log([] == false);   // true\nconsole.log([] === false);  // false\n\nconsole.log(\"5\" == 5);      // true\nconsole.log(\"5\" === 5);     // false\n\n// == allows type coercion.\n// === checks type and value without coercion.",
+          "key_concept": "Type coercion"
+        },
+        {
+          "id": 45,
+          "title": "Object Reference Equality",
+          "category": "JavaScript Output",
+          "difficulty": "Easy",
+          "question": "Why are two separately created empty objects not strictly equal?",
+          "solution": "const a = {};\nconst b = {};\n\nconsole.log(a === b); // false\n\n// Objects are compared by reference.\n// a and b point to different object instances.",
+          "key_concept": "Reference equality"
+        },
+        {
+          "id": 46,
+          "title": "Reference vs Value",
+          "category": "JavaScript Output",
+          "difficulty": "Easy",
+          "question": "Predict the output when two variables reference the same object and one modifies a property.",
+          "solution": "const a = {\n  name: \"Ram\"\n};\n\nconst b = a;\n\nb.name = \"Shyam\";\n\nconsole.log(a.name); // \"Shyam\"\n\n// a and b reference the same object.",
+          "key_concept": "Object references"
+        },
+        {
+          "id": 47,
+          "title": "Implement Promise.race",
+          "category": "Async JavaScript",
+          "difficulty": "Medium",
+          "question": "Implement a simplified Promise.race that settles when the first input promise settles.",
+          "solution": "function promiseRace(promises) {\n  return new Promise((resolve, reject) => {\n    for (const promise of promises) {\n      Promise.resolve(promise).then(resolve, reject);\n    }\n  });\n}\n\npromiseRace([\n  Promise.resolve(\"first\"),\n  new Promise(resolve => setTimeout(() => resolve(\"second\"), 100))\n]).then(console.log);",
+          "key_concept": "Promise settlement"
+        },
+        {
+          "id": 48,
+          "title": "Sequential API Calls",
+          "category": "Async JavaScript",
+          "difficulty": "Medium",
+          "question": "Call API URLs one after another rather than concurrently.",
+          "solution": "async function fetchSequentially(urls) {\n  const results = [];\n\n  for (const url of urls) {\n    const response = await fetch(url);\n\n    if (!response.ok) {\n      throw new Error(`Request failed: ${url}`);\n    }\n\n    results.push(await response.json());\n  }\n\n  return results;\n}",
+          "key_concept": "async/await and sequential execution"
+        },
+        {
+          "id": 49,
+          "title": "Limit Concurrent API Calls",
+          "category": "Async JavaScript",
+          "difficulty": "Hard",
+          "question": "Given many async tasks, execute no more than a fixed number concurrently.",
+          "solution": "async function runWithConcurrency(tasks, limit) {\n  const results = new Array(tasks.length);\n  let nextIndex = 0;\n\n  async function worker() {\n    while (true) {\n      const index = nextIndex++;\n\n      if (index >= tasks.length) return;\n\n      results[index] = await tasks[index]();\n    }\n  }\n\n  const workers = Array.from(\n    { length: Math.min(limit, tasks.length) },\n    () => worker()\n  );\n\n  await Promise.all(workers);\n\n  return results;\n}\n\n// Example:\n// runWithConcurrency(\n//   [() => fetch(\"/1\"), () => fetch(\"/2\"), ...],\n//   5\n// );",
+          "key_concept": "Concurrency control"
+        },
+        {
+          "id": 50,
+          "title": "API Search with AbortController",
+          "category": "React / Async",
+          "difficulty": "Hard",
+          "question": "Prevent stale autocomplete/search requests from updating state after a newer request starts.",
+          "solution": "useEffect(() => {\n  const controller = new AbortController();\n\n  async function search() {\n    try {\n      const response = await fetch(\n        `/api/search?q=${encodeURIComponent(query)}`,\n        { signal: controller.signal }\n      );\n\n      const data = await response.json();\n      setResults(data);\n    } catch (error) {\n      if (error.name !== \"AbortError\") {\n        setError(error);\n      }\n    }\n  }\n\n  if (query) {\n    search();\n  }\n\n  return () => controller.abort();\n}, [query]);",
+          "key_concept": "Request cancellation and stale responses"
+        }
+      ]
+    },
+    "react_js": {
+      "question_count": 35,
+      "questions": [
+        {
+          "id": 51,
+          "category": "React.js",
+          "topic": "Counter",
+          "difficulty": "Easy",
+          "question": "Create a counter with Increment, Decrement, and Reset buttons using useState.",
+          "example": {
+            "input": "Initial count = 0",
+            "output": "Increment => 1, Decrement => 0, Reset => 0"
+          },
+          "solution": "import { useState } from \"react\";\n\nfunction Counter() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div>\n      <h2>{count}</h2>\n      <button onClick={() => setCount(c => c + 1)}>+</button>\n      <button onClick={() => setCount(c => c - 1)}>-</button>\n      <button onClick={() => setCount(0)}>Reset</button>\n    </div>\n  );\n}\n\nexport default Counter;",
+          "explanation": "useState stores the current count. Functional updates are safe when the new state depends on the previous state.",
+          "interview_tip": "Explain why setCount(c => c + 1) is preferable to setCount(count + 1) when multiple updates may be batched."
+        },
+        {
+          "id": 52,
+          "category": "React.js",
+          "topic": "Todo List",
+          "difficulty": "Easy",
+          "question": "Build a Todo component that can add and remove todos.",
+          "example": {
+            "input": "Add 'Learn React', then remove it",
+            "output": "Todo appears and can be removed"
+          },
+          "solution": "import { useState } from \"react\";\n\nfunction Todo() {\n  const [text, setText] = useState(\"\");\n  const [todos, setTodos] = useState([]);\n\n  const addTodo = () => {\n    if (!text.trim()) return;\n    setTodos(prev => [...prev, { id: Date.now(), text }]);\n    setText(\"\");\n  };\n\n  const removeTodo = id => {\n    setTodos(prev => prev.filter(todo => todo.id !== id));\n  };\n\n  return (\n    <div>\n      <input value={text} onChange={e => setText(e.target.value)} />\n      <button onClick={addTodo}>Add</button>\n\n      {todos.map(todo => (\n        <div key={todo.id}>\n          {todo.text}\n          <button onClick={() => removeTodo(todo.id)}>Delete</button>\n        </div>\n      ))}\n    </div>\n  );\n}\n\nexport default Todo;",
+          "explanation": "The input is controlled by state. Adding creates a new array instead of mutating the existing state; filtering removes an item immutably.",
+          "interview_tip": "Be ready to explain why a stable unique key is important when rendering lists."
+        },
+        {
+          "id": 53,
+          "category": "React.js",
+          "topic": "Toggle",
+          "difficulty": "Easy",
+          "question": "Create a toggle button that switches between ON and OFF.",
+          "example": {
+            "input": "Click button",
+            "output": "OFF -> ON -> OFF"
+          },
+          "solution": "import { useState } from \"react\";\n\nfunction Toggle() {\n  const [on, setOn] = useState(false);\n\n  return (\n    <button onClick={() => setOn(prev => !prev)}>\n      {on ? \"ON\" : \"OFF\"}\n    </button>\n  );\n}",
+          "explanation": "The functional state update flips the previous boolean value.",
+          "interview_tip": "This is a simple test of state and event handling."
+        },
+        {
+          "id": 54,
+          "category": "React.js",
+          "topic": "Search Filter",
+          "difficulty": "Easy",
+          "question": "Filter a list of users based on a search input.",
+          "example": {
+            "input": "Users: Ram, Sam, Raj; search='ra'",
+            "output": "Ram, Raj"
+          },
+          "solution": "import { useState } from \"react\";\n\nfunction SearchList() {\n  const users = [\"Ram\", \"Sam\", \"Raj\", \"John\"];\n  const [search, setSearch] = useState(\"\");\n\n  const filtered = users.filter(user =>\n    user.toLowerCase().includes(search.toLowerCase())\n  );\n\n  return (\n    <div>\n      <input\n        value={search}\n        onChange={e => setSearch(e.target.value)}\n        placeholder=\"Search\"\n      />\n\n      {filtered.map(user => (\n        <div key={user}>{user}</div>\n      ))}\n    </div>\n  );\n}",
+          "explanation": "Filtering is derived from the current search state; there is no need to store filtered users separately.",
+          "interview_tip": "Explain why derived data generally should not be duplicated in state."
+        },
+        {
+          "id": 55,
+          "category": "React.js",
+          "topic": "Debounced Search",
+          "difficulty": "Medium",
+          "question": "Create a search component that waits 500ms after typing stops before calling the API.",
+          "example": {
+            "input": "Type 'react'",
+            "output": "One API call after 500ms of inactivity"
+          },
+          "solution": "import { useEffect, useState } from \"react\";\n\nfunction Search() {\n  const [search, setSearch] = useState(\"\");\n  const [results, setResults] = useState([]);\n\n  useEffect(() => {\n    if (!search.trim()) {\n      setResults([]);\n      return;\n    }\n\n    const timer = setTimeout(async () => {\n      const response = await fetch(\n        `/api/search?q=${encodeURIComponent(search)}`\n      );\n      const data = await response.json();\n      setResults(data);\n    }, 500);\n\n    return () => clearTimeout(timer);\n  }, [search]);\n\n  return (\n    <div>\n      <input\n        value={search}\n        onChange={e => setSearch(e.target.value)}\n      />\n\n      {results.map(item => (\n        <div key={item.id}>{item.name}</div>\n      ))}\n    </div>\n  );\n}",
+          "explanation": "Every keystroke creates a timer. Cleanup cancels the previous timer, so only the final input after 500ms triggers the request.",
+          "interview_tip": "The key concept is useEffect cleanup and why debounce reduces API calls."
+        },
+        {
+          "id": 56,
+          "category": "React.js",
+          "topic": "useDebounce Custom Hook",
+          "difficulty": "Medium",
+          "question": "Implement a reusable useDebounce(value, delay) custom hook.",
+          "example": {
+            "input": "value changes rapidly",
+            "output": "Returned value changes after the delay"
+          },
+          "solution": "import { useEffect, useState } from \"react\";\n\nfunction useDebounce(value, delay) {\n  const [debouncedValue, setDebouncedValue] = useState(value);\n\n  useEffect(() => {\n    const timer = setTimeout(() => {\n      setDebouncedValue(value);\n    }, delay);\n\n    return () => clearTimeout(timer);\n  }, [value, delay]);\n\n  return debouncedValue;\n}",
+          "explanation": "The hook delays propagation of the latest value and cleans up the previous timer.",
+          "interview_tip": "A common follow-up is to use this hook with an API search."
+        },
+        {
+          "id": 57,
+          "category": "React.js",
+          "topic": "usePrevious",
+          "difficulty": "Medium",
+          "question": "Create a hook that returns the previous value from the previous render.",
+          "example": {
+            "input": "value: 10 then 20",
+            "output": "On the 20 render, previous value is 10"
+          },
+          "solution": "import { useEffect, useRef } from \"react\";\n\nfunction usePrevious(value) {\n  const ref = useRef();\n\n  useEffect(() => {\n    ref.current = value;\n  }, [value]);\n\n  return ref.current;\n}",
+          "explanation": "useRef persists between renders without causing a re-render. useEffect updates it after the current render.",
+          "interview_tip": "Explain why returning ref.current before the effect update gives the previous value."
+        },
+        {
+          "id": 58,
+          "category": "React.js",
+          "topic": "useLocalStorage",
+          "difficulty": "Medium",
+          "question": "Create a custom hook that stores state in localStorage and restores it on initial load.",
+          "example": {
+            "input": "theme='dark'",
+            "output": "Refresh keeps theme='dark'"
+          },
+          "solution": "import { useEffect, useState } from \"react\";\n\nfunction useLocalStorage(key, initialValue) {\n  const [value, setValue] = useState(() => {\n    const stored = localStorage.getItem(key);\n    return stored ? JSON.parse(stored) : initialValue;\n  });\n\n  useEffect(() => {\n    localStorage.setItem(key, JSON.stringify(value));\n  }, [key, value]);\n\n  return [value, setValue];\n}",
+          "explanation": "The lazy initializer reads localStorage once during initialization, while the effect persists subsequent state changes.",
+          "interview_tip": "In Next.js/SSR, mention that localStorage is browser-only and should be accessed safely on the client."
+        },
+        {
+          "id": 59,
+          "category": "React.js",
+          "topic": "useFetch",
+          "difficulty": "Medium",
+          "question": "Create a reusable hook for fetching data with loading and error state.",
+          "example": {
+            "input": "URL='/api/users'",
+            "output": "loading -> data or error"
+          },
+          "solution": "import { useEffect, useState } from \"react\";\n\nfunction useFetch(url) {\n  const [data, setData] = useState(null);\n  const [loading, setLoading] = useState(true);\n  const [error, setError] = useState(null);\n\n  useEffect(() => {\n    let cancelled = false;\n\n    async function load() {\n      try {\n        setLoading(true);\n        setError(null);\n\n        const response = await fetch(url);\n        if (!response.ok) throw new Error(\"Request failed\");\n\n        const result = await response.json();\n\n        if (!cancelled) {\n          setData(result);\n        }\n      } catch (err) {\n        if (!cancelled) {\n          setError(err);\n        }\n      } finally {\n        if (!cancelled) {\n          setLoading(false);\n        }\n      }\n    }\n\n    load();\n\n    return () => {\n      cancelled = true;\n    };\n  }, [url]);\n\n  return { data, loading, error };\n}",
+          "explanation": "The hook centralizes loading, success, and error handling. The cancellation flag prevents an old request from updating state after the component changes or unmounts.",
+          "interview_tip": "A stronger production answer can use AbortController instead of only a cancellation flag."
+        },
+        {
+          "id": 60,
+          "category": "React.js",
+          "topic": "useOnClickOutside",
+          "difficulty": "Medium",
+          "question": "Create a custom hook that detects clicks outside a referenced element.",
+          "example": {
+            "input": "Click outside modal",
+            "output": "onOutside callback runs"
+          },
+          "solution": "import { useEffect } from \"react\";\n\nfunction useOnClickOutside(ref, callback) {\n  useEffect(() => {\n    function handleClick(event) {\n      if (ref.current && !ref.current.contains(event.target)) {\n        callback();\n      }\n    }\n\n    document.addEventListener(\"mousedown\", handleClick);\n\n    return () => {\n      document.removeEventListener(\"mousedown\", handleClick);\n    };\n  }, [ref, callback]);\n}",
+          "explanation": "The document listener checks whether the clicked target is outside the referenced DOM node and is removed during cleanup.",
+          "interview_tip": "Mention cleanup to avoid event-listener leaks."
+        },
+        {
+          "id": 61,
+          "category": "React.js",
+          "topic": "Pagination",
+          "difficulty": "Medium",
+          "question": "Implement client-side pagination with Previous, Next, and page numbers.",
+          "example": {
+            "input": "100 items, pageSize=10",
+            "output": "10 pages with navigation"
+          },
+          "solution": "import { useState } from \"react\";\n\nfunction Pagination({ items }) {\n  const [page, setPage] = useState(1);\n  const pageSize = 10;\n  const totalPages = Math.ceil(items.length / pageSize);\n\n  const start = (page - 1) * pageSize;\n  const visibleItems = items.slice(start, start + pageSize);\n\n  return (\n    <div>\n      {visibleItems.map(item => (\n        <div key={item.id}>{item.name}</div>\n      ))}\n\n      <button\n        disabled={page === 1}\n        onClick={() => setPage(p => p - 1)}\n      >\n        Previous\n      </button>\n\n      {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (\n        <button key={p} onClick={() => setPage(p)}>\n          {p}\n        </button>\n      ))}\n\n      <button\n        disabled={page === totalPages}\n        onClick={() => setPage(p => p + 1)}\n      >\n        Next\n      </button>\n    </div>\n  );\n}",
+          "explanation": "The start index is calculated from page and pageSize, then slice selects the visible records.",
+          "interview_tip": "For server-side pagination, send page and pageSize to the API instead of slicing the full dataset."
+        },
+        {
+          "id": 62,
+          "category": "React.js",
+          "topic": "Infinite Scroll",
+          "difficulty": "Hard",
+          "question": "Load the next page when the user reaches the bottom using IntersectionObserver.",
+          "example": {
+            "input": "Sentinel becomes visible",
+            "output": "Next page loads"
+          },
+          "solution": "import { useEffect, useRef } from \"react\";\n\nfunction InfiniteList({ loadNextPage, loading, hasMore }) {\n  const sentinelRef = useRef(null);\n\n  useEffect(() => {\n    const node = sentinelRef.current;\n    if (!node) return;\n\n    const observer = new IntersectionObserver(entries => {\n      if (entries[0].isIntersecting && !loading && hasMore) {\n        loadNextPage();\n      }\n    });\n\n    observer.observe(node);\n\n    return () => observer.disconnect();\n  }, [loadNextPage, loading, hasMore]);\n\n  return <div ref={sentinelRef}>Loading trigger</div>;\n}",
+          "explanation": "IntersectionObserver detects when the sentinel enters the viewport without repeatedly handling scroll events.",
+          "interview_tip": "Discuss preventing duplicate requests while loading and stopping when hasMore is false."
+        },
+        {
+          "id": 63,
+          "category": "React.js",
+          "topic": "Modal",
+          "difficulty": "Easy",
+          "question": "Create a reusable modal with open/close behavior and an overlay.",
+          "example": {
+            "input": "Click Open, then overlay/Close",
+            "output": "Modal opens and closes"
+          },
+          "solution": "import { useState } from \"react\";\n\nfunction Modal() {\n  const [open, setOpen] = useState(false);\n\n  return (\n    <div>\n      <button onClick={() => setOpen(true)}>Open</button>\n\n      {open && (\n        <div\n          onClick={() => setOpen(false)}\n          style={{\n            position: \"fixed\",\n            inset: 0,\n            background: \"rgba(0,0,0,.4)\"\n          }}\n        >\n          <div\n            onClick={e => e.stopPropagation()}\n            style={{ background: \"#fff\", padding: 20 }}\n          >\n            <h3>Modal</h3>\n            <button onClick={() => setOpen(false)}>Close</button>\n          </div>\n        </div>\n      )}\n    </div>\n  );\n}",
+          "explanation": "The overlay closes the modal, while stopPropagation prevents clicks inside the dialog from reaching the overlay.",
+          "interview_tip": "For production, discuss focus management, Escape handling, portals, and accessibility."
+        },
+        {
+          "id": 64,
+          "category": "React.js",
+          "topic": "Tabs",
+          "difficulty": "Easy",
+          "question": "Create tabs where clicking a tab displays its corresponding content.",
+          "example": {
+            "input": "Click Profile",
+            "output": "Profile content displayed"
+          },
+          "solution": "import { useState } from \"react\";\n\nfunction Tabs() {\n  const tabs = [\n    { id: \"home\", label: \"Home\", content: \"Home content\" },\n    { id: \"profile\", label: \"Profile\", content: \"Profile content\" },\n    { id: \"settings\", label: \"Settings\", content: \"Settings content\" }\n  ];\n\n  const [active, setActive] = useState(\"home\");\n\n  const current = tabs.find(tab => tab.id === active);\n\n  return (\n    <div>\n      {tabs.map(tab => (\n        <button key={tab.id} onClick={() => setActive(tab.id)}>\n          {tab.label}\n        </button>\n      ))}\n\n      <div>{current.content}</div>\n    </div>\n  );\n}",
+          "explanation": "Only the active tab id needs to be stored in state; content is derived from the tabs configuration.",
+          "interview_tip": "For accessible tabs, mention ARIA roles and keyboard navigation."
+        },
+        {
+          "id": 65,
+          "category": "React.js",
+          "topic": "Accordion",
+          "difficulty": "Easy",
+          "question": "Create an accordion where clicking a question expands or collapses its answer.",
+          "example": {
+            "input": "Click Question 1",
+            "output": "Answer 1 expands"
+          },
+          "solution": "import { useState } from \"react\";\n\nfunction Accordion() {\n  const items = [\n    { id: 1, q: \"What is React?\", a: \"A UI library.\" },\n    { id: 2, q: \"What is JSX?\", a: \"Syntax used to describe UI.\" }\n  ];\n\n  const [openId, setOpenId] = useState(null);\n\n  return (\n    <div>\n      {items.map(item => (\n        <div key={item.id}>\n          <button\n            onClick={() =>\n              setOpenId(id => (id === item.id ? null : item.id))\n            }\n          >\n            {item.q}\n          </button>\n\n          {openId === item.id && <p>{item.a}</p>}\n        </div>\n      ))}\n    </div>\n  );\n}",
+          "explanation": "openId identifies the currently expanded item. Clicking the same item closes it.",
+          "interview_tip": "For multiple-open accordions, store a Set or array of open ids instead."
+        },
+        {
+          "id": 66,
+          "category": "React.js",
+          "topic": "Select All Checkboxes",
+          "difficulty": "Medium",
+          "question": "Implement a list of checkboxes with Select All and individual selection.",
+          "example": {
+            "input": "Select All checked",
+            "output": "Every item becomes checked"
+          },
+          "solution": "import { useState } from \"react\";\n\nfunction Checkboxes() {\n  const items = [\"A\", \"B\", \"C\"];\n  const [selected, setSelected] = useState([]);\n\n  const allSelected = selected.length === items.length;\n\n  const toggleAll = () => {\n    setSelected(allSelected ? [] : items);\n  };\n\n  const toggle = item => {\n    setSelected(prev =>\n      prev.includes(item)\n        ? prev.filter(x => x !== item)\n        : [...prev, item]\n    );\n  };\n\n  return (\n    <div>\n      <label>\n        <input\n          type=\"checkbox\"\n          checked={allSelected}\n          onChange={toggleAll}\n        />\n        Select All\n      </label>\n\n      {items.map(item => (\n        <label key={item}>\n          <input\n            type=\"checkbox\"\n            checked={selected.includes(item)}\n            onChange={() => toggle(item)}\n          />\n          {item}\n        </label>\n      ))}\n    </div>\n  );\n}",
+          "explanation": "selected is the source of truth. Select All either selects every item or clears the selection.",
+          "interview_tip": "A production version may need an indeterminate state when some but not all items are selected."
+        },
+        {
+          "id": 67,
+          "category": "React.js",
+          "topic": "Stopwatch",
+          "difficulty": "Medium",
+          "question": "Create a stopwatch with Start, Stop, and Reset buttons.",
+          "example": {
+            "input": "Start for 3 seconds, Stop",
+            "output": "Timer displays approximately 3 seconds"
+          },
+          "solution": "import { useEffect, useState } from \"react\";\n\nfunction Stopwatch() {\n  const [running, setRunning] = useState(false);\n  const [seconds, setSeconds] = useState(0);\n\n  useEffect(() => {\n    if (!running) return;\n\n    const timer = setInterval(() => {\n      setSeconds(s => s + 1);\n    }, 1000);\n\n    return () => clearInterval(timer);\n  }, [running]);\n\n  return (\n    <div>\n      <h2>{seconds}s</h2>\n      <button onClick={() => setRunning(true)}>Start</button>\n      <button onClick={() => setRunning(false)}>Stop</button>\n      <button onClick={() => {\n        setRunning(false);\n        setSeconds(0);\n      }}>\n        Reset\n      </button>\n    </div>\n  );\n}",
+          "explanation": "The interval exists only while running is true and is cleared whenever running changes or the component unmounts.",
+          "interview_tip": "Always mention cleanup of intervals."
+        },
+        {
+          "id": 68,
+          "category": "React.js",
+          "topic": "Form Validation",
+          "difficulty": "Medium",
+          "question": "Create a simple controlled login form with required email and password validation.",
+          "example": {
+            "input": "email empty",
+            "output": "Email required error"
+          },
+          "solution": "import { useState } from \"react\";\n\nfunction LoginForm() {\n  const [form, setForm] = useState({\n    email: \"\",\n    password: \"\"\n  });\n\n  const [errors, setErrors] = useState({});\n\n  const submit = e => {\n    e.preventDefault();\n\n    const nextErrors = {};\n\n    if (!form.email.trim()) {\n      nextErrors.email = \"Email is required\";\n    }\n\n    if (!form.password.trim()) {\n      nextErrors.password = \"Password is required\";\n    }\n\n    setErrors(nextErrors);\n\n    if (Object.keys(nextErrors).length === 0) {\n      console.log(\"Submit\", form);\n    }\n  };\n\n  return (\n    <form onSubmit={submit}>\n      <input\n        value={form.email}\n        onChange={e => setForm(f => ({\n          ...f,\n          email: e.target.value\n        }))}\n      />\n      {errors.email && <p>{errors.email}</p>}\n\n      <input\n        type=\"password\"\n        value={form.password}\n        onChange={e => setForm(f => ({\n          ...f,\n          password: e.target.value\n        }))}\n      />\n      {errors.password && <p>{errors.password}</p>}\n\n      <button type=\"submit\">Login</button>\n    </form>\n  );\n}",
+          "explanation": "The form is controlled by React state. Validation builds a new errors object and submission occurs only when there are no errors.",
+          "interview_tip": "Be ready to explain controlled versus uncontrolled inputs."
+        },
+        {
+          "id": 69,
+          "category": "React.js",
+          "topic": "Multi-Step Form",
+          "difficulty": "Medium",
+          "question": "Build a multi-step form with Next, Back, and final Submit behavior.",
+          "example": {
+            "input": "Step 1 -> Step 2 -> Submit",
+            "output": "Data is retained across steps"
+          },
+          "solution": "import { useState } from \"react\";\n\nfunction MultiStepForm() {\n  const [step, setStep] = useState(1);\n  const [form, setForm] = useState({\n    name: \"\",\n    email: \"\"\n  });\n\n  return (\n    <div>\n      {step === 1 && (\n        <input\n          placeholder=\"Name\"\n          value={form.name}\n          onChange={e =>\n            setForm(f => ({ ...f, name: e.target.value }))\n          }\n        />\n      )}\n\n      {step === 2 && (\n        <input\n          placeholder=\"Email\"\n          value={form.email}\n          onChange={e =>\n            setForm(f => ({ ...f, email: e.target.value }))\n          }\n        />\n      )}\n\n      {step > 1 && (\n        <button onClick={() => setStep(s => s - 1)}>Back</button>\n      )}\n\n      {step < 2 ? (\n        <button onClick={() => setStep(s => s + 1)}>Next</button>\n      ) : (\n        <button onClick={() => console.log(form)}>Submit</button>\n      )}\n    </div>\n  );\n}",
+          "explanation": "The step number controls which section is displayed while one shared form object preserves values across steps.",
+          "interview_tip": "Mention step-specific validation before allowing Next."
+        },
+        {
+          "id": 70,
+          "category": "React.js",
+          "topic": "Shopping Cart",
+          "difficulty": "Medium",
+          "question": "Build a shopping cart that adds products, increases/decreases quantity, removes items, and calculates total.",
+          "example": {
+            "input": "Add product price 100 twice",
+            "output": "quantity 2, total 200"
+          },
+          "solution": "import { useMemo, useState } from \"react\";\n\nfunction Cart() {\n  const [cart, setCart] = useState([]);\n\n  const add = product => {\n    setCart(prev => {\n      const found = prev.find(item => item.id === product.id);\n\n      if (found) {\n        return prev.map(item =>\n          item.id === product.id\n            ? { ...item, quantity: item.quantity + 1 }\n            : item\n        );\n      }\n\n      return [...prev, { ...product, quantity: 1 }];\n    });\n  };\n\n  const updateQuantity = (id, delta) => {\n    setCart(prev =>\n      prev\n        .map(item =>\n          item.id === id\n            ? { ...item, quantity: item.quantity + delta }\n            : item\n        )\n        .filter(item => item.quantity > 0)\n    );\n  };\n\n  const total = useMemo(\n    () => cart.reduce((sum, item) => sum + item.price * item.quantity, 0),\n    [cart]\n  );\n\n  return <div>Total: {total}</div>;\n}",
+          "explanation": "Cart updates are immutable. The total is derived from cart and memoized to avoid recalculating when unrelated state changes.",
+          "interview_tip": "Discuss whether useMemo is actually needed based on calculation cost."
+        },
+        {
+          "id": 71,
+          "category": "React.js",
+          "topic": "API Retry",
+          "difficulty": "Hard",
+          "question": "Create a helper that retries a failed API request a fixed number of times.",
+          "example": {
+            "input": "maxRetries=3",
+            "output": "Up to 4 total attempts if the initial attempt is counted separately"
+          },
+          "solution": "async function fetchWithRetry(url, retries = 3) {\n  let lastError;\n\n  for (let attempt = 0; attempt <= retries; attempt++) {\n    try {\n      const response = await fetch(url);\n\n      if (!response.ok) {\n        throw new Error(`HTTP ${response.status}`);\n      }\n\n      return await response.json();\n    } catch (error) {\n      lastError = error;\n\n      if (attempt === retries) {\n        throw lastError;\n      }\n    }\n  }\n}",
+          "explanation": "The loop retries after failures and throws the last error when the retry limit is exhausted.",
+          "interview_tip": "A stronger production solution may add exponential backoff and retry only transient errors."
+        },
+        {
+          "id": 72,
+          "category": "React.js",
+          "topic": "Request Cancellation",
+          "difficulty": "Hard",
+          "question": "Cancel an in-flight fetch when the query changes or the component unmounts.",
+          "example": {
+            "input": "Search 'rea' then quickly 'react'",
+            "output": "Old request is aborted"
+          },
+          "solution": "import { useEffect, useState } from \"react\";\n\nfunction Search({ query }) {\n  const [data, setData] = useState([]);\n\n  useEffect(() => {\n    const controller = new AbortController();\n\n    async function load() {\n      try {\n        const response = await fetch(\n          `/api/search?q=${encodeURIComponent(query)}`,\n          { signal: controller.signal }\n        );\n\n        const result = await response.json();\n        setData(result);\n      } catch (error) {\n        if (error.name !== \"AbortError\") {\n          console.error(error);\n        }\n      }\n    }\n\n    if (query) load();\n\n    return () => controller.abort();\n  }, [query]);\n\n  return <div>{data.length} results</div>;\n}",
+          "explanation": "Each effect creates an AbortController. Cleanup aborts the request associated with the previous query.",
+          "interview_tip": "This prevents stale requests from competing with newer requests and reduces wasted network work."
+        },
+        {
+          "id": 73,
+          "category": "React.js",
+          "topic": "useMemo",
+          "difficulty": "Medium",
+          "question": "Memoize an expensive derived calculation so it only recalculates when its input changes.",
+          "example": {
+            "input": "items and unrelated counter state",
+            "output": "Filtering doesn't rerun when only counter changes"
+          },
+          "solution": "import { useMemo, useState } from \"react\";\n\nfunction ProductList({ products }) {\n  const [search, setSearch] = useState(\"\");\n  const [count, setCount] = useState(0);\n\n  const filtered = useMemo(() => {\n    return products.filter(product =>\n      product.name.toLowerCase().includes(search.toLowerCase())\n    );\n  }, [products, search]);\n\n  return (\n    <div>\n      <button onClick={() => setCount(c => c + 1)}>\n        Count: {count}\n      </button>\n\n      <input\n        value={search}\n        onChange={e => setSearch(e.target.value)}\n      />\n\n      {filtered.map(product => (\n        <div key={product.id}>{product.name}</div>\n      ))}\n    </div>\n  );\n}",
+          "explanation": "The filtered array is recomputed only when products or search changes.",
+          "interview_tip": "Do not say useMemo automatically makes every component faster; explain the tradeoff and use it for meaningful expensive work."
+        },
+        {
+          "id": 74,
+          "category": "React.js",
+          "topic": "useCallback + React.memo",
+          "difficulty": "Medium",
+          "question": "Prevent a memoized child from rerendering because a callback prop gets a new function reference on every parent render.",
+          "example": {
+            "input": "Parent counter changes",
+            "output": "Child can skip rerender when callback dependency is unchanged"
+          },
+          "solution": "import { memo, useCallback, useState } from \"react\";\n\nconst Child = memo(function Child({ onClick }) {\n  console.log(\"Child render\");\n  return <button onClick={onClick}>Child</button>;\n});\n\nfunction Parent() {\n  const [count, setCount] = useState(0);\n\n  const handleClick = useCallback(() => {\n    console.log(\"clicked\");\n  }, []);\n\n  return (\n    <div>\n      <button onClick={() => setCount(c => c + 1)}>\n        Parent: {count}\n      </button>\n\n      <Child onClick={handleClick} />\n    </div>\n  );\n}",
+          "explanation": "React.memo can skip a child render when props are shallowly equal. useCallback keeps the function reference stable.",
+          "interview_tip": "Explain that useCallback is useful only when referential equality matters, such as memoized children or hook dependencies."
+        },
+        {
+          "id": 75,
+          "category": "React.js",
+          "topic": "useReducer",
+          "difficulty": "Medium",
+          "question": "Implement a counter using useReducer with increment, decrement, and reset actions.",
+          "example": {
+            "input": "dispatch increment",
+            "output": "count increases by 1"
+          },
+          "solution": "import { useReducer } from \"react\";\n\nfunction reducer(state, action) {\n  switch (action.type) {\n    case \"increment\":\n      return { count: state.count + 1 };\n\n    case \"decrement\":\n      return { count: state.count - 1 };\n\n    case \"reset\":\n      return { count: 0 };\n\n    default:\n      return state;\n  }\n}\n\nfunction Counter() {\n  const [state, dispatch] = useReducer(reducer, { count: 0 });\n\n  return (\n    <div>\n      <h2>{state.count}</h2>\n      <button onClick={() => dispatch({ type: \"increment\" })}>+</button>\n      <button onClick={() => dispatch({ type: \"decrement\" })}>-</button>\n      <button onClick={() => dispatch({ type: \"reset\" })}>Reset</button>\n    </div>\n  );\n}",
+          "explanation": "useReducer centralizes state transitions as explicit actions, which is useful when state logic becomes more complex.",
+          "interview_tip": "Compare useReducer with useState and explain when reducer-based state becomes easier to maintain."
+        },
+        {
+          "id": 76,
+          "category": "React.js",
+          "topic": "Nested Comments",
+          "difficulty": "Hard",
+          "question": "Render nested comments recursively when each comment can contain replies.",
+          "example": {
+            "input": "Comment with two nested replies",
+            "output": "Indented recursive comment tree"
+          },
+          "solution": "function Comment({ comment }) {\n  return (\n    <div style={{ marginLeft: 20 }}>\n      <p>{comment.text}</p>\n\n      {comment.replies?.map(reply => (\n        <Comment key={reply.id} comment={reply} />\n      ))}\n    </div>\n  );\n}\n\nfunction Comments({ comments }) {\n  return comments.map(comment => (\n    <Comment key={comment.id} comment={comment} />\n  ));\n}",
+          "explanation": "The component calls itself for each reply, naturally matching the recursive data structure.",
+          "interview_tip": "This pattern also applies to file trees, menus, organizational charts, and nested categories."
+        },
+        {
+          "id": 77,
+          "category": "React.js",
+          "topic": "Tree View",
+          "difficulty": "Hard",
+          "question": "Create a recursive tree component with expandable/collapsible nodes.",
+          "example": {
+            "input": "Folder with child folders",
+            "output": "Click folder expands or collapses children"
+          },
+          "solution": "import { useState } from \"react\";\n\nfunction TreeNode({ node }) {\n  const [open, setOpen] = useState(false);\n  const hasChildren = node.children?.length > 0;\n\n  return (\n    <div style={{ marginLeft: 20 }}>\n      <div>\n        {hasChildren && (\n          <button onClick={() => setOpen(v => !v)}>\n            {open ? \"-\" : \"+\"}\n          </button>\n        )}\n        {node.name}\n      </div>\n\n      {open &&\n        node.children.map(child => (\n          <TreeNode key={child.id} node={child} />\n        ))}\n    </div>\n  );\n}",
+          "explanation": "Each node owns its expanded state and recursively renders children.",
+          "interview_tip": "For very large trees, discuss virtualization and avoiding unnecessary rerenders."
+        },
+        {
+          "id": 78,
+          "category": "React.js",
+          "topic": "Drag and Drop",
+          "difficulty": "Hard",
+          "question": "Implement basic drag-and-drop reordering of a list using native HTML drag events.",
+          "example": {
+            "input": "Drag item 1 below item 3",
+            "output": "List order changes"
+          },
+          "solution": "import { useState } from \"react\";\n\nfunction SortableList() {\n  const [items, setItems] = useState([\"A\", \"B\", \"C\", \"D\"]);\n  const [draggedIndex, setDraggedIndex] = useState(null);\n\n  const drop = targetIndex => {\n    if (draggedIndex === null || draggedIndex === targetIndex) return;\n\n    setItems(prev => {\n      const next = [...prev];\n      const [moved] = next.splice(draggedIndex, 1);\n      next.splice(targetIndex, 0, moved);\n      return next;\n    });\n\n    setDraggedIndex(null);\n  };\n\n  return (\n    <div>\n      {items.map((item, index) => (\n        <div\n          key={item}\n          draggable\n          onDragStart={() => setDraggedIndex(index)}\n          onDragOver={e => e.preventDefault()}\n          onDrop={() => drop(index)}\n        >\n          {item}\n        </div>\n      ))}\n    </div>\n  );\n}",
+          "explanation": "The dragged index is stored, and on drop the array is copied and the item is moved using splice.",
+          "interview_tip": "Know that production drag-and-drop often needs better accessibility and touch support."
+        },
+        {
+          "id": 79,
+          "category": "React.js",
+          "topic": "File Upload",
+          "difficulty": "Medium",
+          "question": "Create a file input that validates file type/size and uploads the selected file using FormData.",
+          "example": {
+            "input": "Select image <= 2MB",
+            "output": "File sent to API"
+          },
+          "solution": "import { useState } from \"react\";\n\nfunction FileUpload() {\n  const [error, setError] = useState(\"\");\n\n  const upload = async event => {\n    const file = event.target.files?.[0];\n    if (!file) return;\n\n    setError(\"\");\n\n    if (!file.type.startsWith(\"image/\")) {\n      setError(\"Only images are allowed\");\n      return;\n    }\n\n    if (file.size > 2 * 1024 * 1024) {\n      setError(\"Maximum size is 2MB\");\n      return;\n    }\n\n    const formData = new FormData();\n    formData.append(\"file\", file);\n\n    const response = await fetch(\"/api/upload\", {\n      method: \"POST\",\n      body: formData\n    });\n\n    if (!response.ok) {\n      setError(\"Upload failed\");\n    }\n  };\n\n  return (\n    <div>\n      <input type=\"file\" onChange={upload} />\n      {error && <p>{error}</p>}\n    </div>\n  );\n}",
+          "explanation": "The browser File object provides type and size information. FormData sends multipart form data to the server.",
+          "interview_tip": "Mention that client-side validation improves UX but server-side validation is still mandatory."
+        },
+        {
+          "id": 80,
+          "category": "React.js",
+          "topic": "Timer with useEffect",
+          "difficulty": "Easy",
+          "question": "Create a countdown timer that starts from 10 and stops at zero.",
+          "example": {
+            "input": "Start at 10",
+            "output": "10,9,8,...,0"
+          },
+          "solution": "import { useEffect, useState } from \"react\";\n\nfunction Countdown() {\n  const [time, setTime] = useState(10);\n  const [running, setRunning] = useState(false);\n\n  useEffect(() => {\n    if (!running || time === 0) return;\n\n    const timer = setInterval(() => {\n      setTime(t => {\n        if (t <= 1) {\n          setRunning(false);\n          return 0;\n        }\n        return t - 1;\n      });\n    }, 1000);\n\n    return () => clearInterval(timer);\n  }, [running, time]);\n\n  return (\n    <div>\n      <h2>{time}</h2>\n      <button onClick={() => setRunning(true)}>Start</button>\n      <button onClick={() => setRunning(false)}>Stop</button>\n      <button onClick={() => {\n        setRunning(false);\n        setTime(10);\n      }}>\n        Reset\n      </button>\n    </div>\n  );\n}",
+          "explanation": "The interval decrements state once per second and is cleaned up when stopped or when the effect reruns.",
+          "interview_tip": "Be careful with stale state inside intervals; functional state updates avoid that problem."
+        },
+        {
+          "id": 81,
+          "category": "React.js",
+          "topic": "Dynamic Form Fields",
+          "difficulty": "Medium",
+          "question": "Create a form where users can dynamically add and remove phone-number fields.",
+          "example": {
+            "input": "Click Add Phone twice",
+            "output": "Three phone inputs total if one existed initially"
+          },
+          "solution": "import { useState } from \"react\";\n\nfunction DynamicPhones() {\n  const [phones, setPhones] = useState([\"\"]);\n\n  const update = (index, value) => {\n    setPhones(prev =>\n      prev.map((phone, i) => (i === index ? value : phone))\n    );\n  };\n\n  const add = () => {\n    setPhones(prev => [...prev, \"\"]);\n  };\n\n  const remove = index => {\n    setPhones(prev => prev.filter((_, i) => i !== index));\n  };\n\n  return (\n    <div>\n      {phones.map((phone, index) => (\n        <div key={index}>\n          <input\n            value={phone}\n            onChange={e => update(index, e.target.value)}\n          />\n          <button onClick={() => remove(index)}>Remove</button>\n        </div>\n      ))}\n\n      <button onClick={add}>Add Phone</button>\n    </div>\n  );\n}",
+          "explanation": "The form stores fields as an array and uses immutable map/filter/spread operations to update it.",
+          "interview_tip": "If fields can be reordered or persisted, use stable IDs instead of array indexes as keys."
+        },
+        {
+          "id": 82,
+          "category": "React.js",
+          "topic": "API Concurrency Limit",
+          "difficulty": "Hard",
+          "question": "Execute many async API tasks while allowing at most five tasks to run concurrently.",
+          "example": {
+            "input": "100 requests, limit=5",
+            "output": "No more than 5 requests active at once"
+          },
+          "solution": "async function runWithConcurrency(tasks, limit) {\n  const results = new Array(tasks.length);\n  let nextIndex = 0;\n\n  async function worker() {\n    while (true) {\n      const index = nextIndex++;\n\n      if (index >= tasks.length) return;\n\n      results[index] = await tasks[index]();\n    }\n  }\n\n  const workers = Array.from(\n    { length: Math.min(limit, tasks.length) },\n    () => worker()\n  );\n\n  await Promise.all(workers);\n\n  return results;\n}\n\n// Example:\n// const tasks = urls.map(url => () => fetch(url).then(r => r.json()));\n// const results = await runWithConcurrency(tasks, 5);",
+          "explanation": "A fixed number of worker functions pull the next task index until all tasks are completed.",
+          "interview_tip": "This is a strong senior-level question because it tests promises, concurrency, closures, and ordering."
+        },
+        {
+          "id": 83,
+          "category": "React.js",
+          "topic": "Optimistic Update",
+          "difficulty": "Hard",
+          "question": "Update UI immediately for a like action, then roll back if the API request fails.",
+          "example": {
+            "input": "Click Like",
+            "output": "UI changes immediately; failure restores previous state"
+          },
+          "solution": "import { useState } from \"react\";\n\nfunction LikeButton() {\n  const [liked, setLiked] = useState(false);\n  const [saving, setSaving] = useState(false);\n\n  const toggleLike = async () => {\n    const previous = liked;\n\n    setLiked(!previous);\n    setSaving(true);\n\n    try {\n      const response = await fetch(\"/api/like\", {\n        method: \"POST\",\n        body: JSON.stringify({ liked: !previous }),\n        headers: { \"Content-Type\": \"application/json\" }\n      });\n\n      if (!response.ok) {\n        throw new Error(\"Failed\");\n      }\n    } catch (error) {\n      setLiked(previous);\n    } finally {\n      setSaving(false);\n    }\n  };\n\n  return (\n    <button disabled={saving} onClick={toggleLike}>\n      {liked ? \"Unlike\" : \"Like\"}\n    </button>\n  );\n}",
+          "explanation": "The UI changes before the server responds. If the request fails, the previous state is restored.",
+          "interview_tip": "Discuss race conditions if users can trigger multiple mutations before earlier requests finish."
+        },
+        {
+          "id": 84,
+          "category": "React.js",
+          "topic": "Lazy Loading Component",
+          "difficulty": "Medium",
+          "question": "Lazy-load a React component and display a fallback while it loads.",
+          "example": {
+            "input": "Open heavy page",
+            "output": "Loading fallback then component"
+          },
+          "solution": "import { lazy, Suspense } from \"react\";\n\nconst HeavyPage = lazy(() => import(\"./HeavyPage\"));\n\nfunction App() {\n  return (\n    <Suspense fallback={<div>Loading...</div>}>\n      <HeavyPage />\n    </Suspense>\n  );\n}",
+          "explanation": "React.lazy splits the component into a separate chunk and Suspense displays fallback UI while the chunk loads.",
+          "interview_tip": "Connect this to route-level code splitting for large applications."
+        },
+        {
+          "id": 85,
+          "category": "React.js",
+          "topic": "Error Boundary",
+          "difficulty": "Hard",
+          "question": "Create a class-based Error Boundary that shows fallback UI when a descendant throws during rendering.",
+          "example": {
+            "input": "Child component throws",
+            "output": "Fallback UI appears"
+          },
+          "solution": "import React from \"react\";\n\nclass ErrorBoundary extends React.Component {\n  state = { hasError: false };\n\n  static getDerivedStateFromError() {\n    return { hasError: true };\n  }\n\n  componentDidCatch(error, info) {\n    console.error(error, info);\n  }\n\n  render() {\n    if (this.state.hasError) {\n      return <h2>Something went wrong.</h2>;\n    }\n\n    return this.props.children;\n  }\n}\n\nexport default ErrorBoundary;",
+          "explanation": "Error boundaries catch rendering/lifecycle errors in descendant components and allow fallback UI instead of crashing the whole tree.",
+          "interview_tip": "Mention that traditional Error Boundaries are class components and do not catch every kind of asynchronous event error."
+        }
+      ]
+    }
+  }
+}

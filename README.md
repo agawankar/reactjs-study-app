@@ -1,6 +1,6 @@
 # Frontend Interview Handbook
 
-A static Vite + React + Material UI app for browsing a large frontend engineering interview question bank — JavaScript, React (including React 18/19 features), Redux, browsers, Node.js, Next.js, API/security, architecture, performance, and more.
+A statically-exported Next.js + Material UI app for browsing a large frontend engineering interview question bank — JavaScript, React (including React 18/19 features), Redux, browsers, Node.js, Next.js, API/security, architecture, performance, and more.
 
 ## Features
 - Part/section navigation with a responsive drawer (permanent on desktop, slide-in on mobile)
@@ -16,13 +16,15 @@ npm install
 npm run dev
 ```
 
-Then open the local Vite URL.
+Then open http://localhost:3000/reactjs-study-app/
 
 ## Production build
 
 ```bash
 npm run build
-npm run preview
+npx serve out
 ```
 
-The source handbook content is stored in `src/data/handbook.json`.
+`npm run build` produces a static export in `out/` (matching the GitHub Pages deployment).
+
+The source handbook content is stored in `app/data/handbook.json`.
