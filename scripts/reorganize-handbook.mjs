@@ -4,8 +4,11 @@
 //     "PART XIII — EXTENDED TOPICS" and writes them to app/data/reactSalvaged.json
 //     so app/data/parts.js can merge them into one consolidated React part
 //     alongside the new 16-topic masterclass.
-//  2. Pulls the remaining "write code" sections into app/data/codingSalvaged.json
-//     so every coding question lives under PART XIV — CODING CHALLENGES.
+//  2. Drops three "write code" sections that only duplicated the master
+//     coding challenges ("13. JavaScript Coding Patterns", "K. Senior Coding
+//     & Problem-Solving", "2. Both variables reference the same object.") —
+//     PART XIV — CODING CHALLENGES already covers all of them, with
+//     alternative solutions, from the JSON sources.
 //  3. Removes "PART II — REACT" and the now-empty "PART XI — CODING & OUTPUT
 //     QUESTIONS".
 //  4. Fixes section titles that were mangled or SHOUTED by the docx import.
@@ -22,7 +25,6 @@ import { dirname, join } from "node:path";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const handbookPath = join(root, "app/data/handbook.json");
 const reactSalvagedPath = join(root, "app/data/reactSalvaged.json");
-const codingSalvagedPath = join(root, "app/data/codingSalvaged.json");
 
 const handbook = JSON.parse(readFileSync(handbookPath, "utf8"));
 
@@ -61,15 +63,11 @@ const reactSalvaged = {
 };
 
 // ---------------------------------------------------------------------------
-// 2. Remaining coding sections → PART XIV
+// 2. Drop the three coding sections that only duplicated PART XIV
 // ---------------------------------------------------------------------------
-const codingSalvaged = {
-  sections: [
-    takeSection(codingOutput, "13. JavaScript Coding Patterns", "JavaScript Output & Patterns"),
-    takeSection(extended, "K. Senior Coding & Problem-Solving Questions", "Senior Coding & Problem-Solving"),
-    takeSection(extended, "2. Both variables reference the same object.", "JavaScript Utility Implementations"),
-  ],
-};
+takeSection(codingOutput, "13. JavaScript Coding Patterns");
+takeSection(extended, "K. Senior Coding & Problem-Solving Questions");
+takeSection(extended, "2. Both variables reference the same object.");
 
 // ---------------------------------------------------------------------------
 // 3. Drop emptied parts
@@ -114,11 +112,8 @@ handbook.meta = {
 // ---------------------------------------------------------------------------
 writeFileSync(handbookPath, JSON.stringify(handbook, null, 2) + "\n");
 writeFileSync(reactSalvagedPath, JSON.stringify(reactSalvaged, null, 2) + "\n");
-writeFileSync(codingSalvagedPath, JSON.stringify(codingSalvaged, null, 2) + "\n");
 
 const n = (s) => s.questions.length;
 console.log("React sections →", reactSalvagedPath);
 for (const s of reactSalvaged.sections) console.log(`  ${s.title} (${n(s)} q)`);
-console.log("Coding sections →", codingSalvagedPath);
-for (const s of codingSalvaged.sections) console.log(`  ${s.title} (${n(s)} q)`);
 console.log("Rewrote", handbookPath);
