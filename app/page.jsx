@@ -33,15 +33,13 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CheckIcon from "@mui/icons-material/Check";
-import handbook from "./data/handbook.json";
-import codingParts from "./data/codingQuestions.js";
+import allParts from "./data/parts.js";
 import { buildTheme } from "./theme.js";
 
 const icons = ["⚡", "⚛", "▣", "◉", "⬢", "⌁", "🔐", "🏗", "🚀", "🧠", "💬", "⌘", "📅"];
 const DRAWER_WIDTH = 290;
 const stripPartPrefix = (t) => t.replace(/^PART\s+[IVXLCDM]+\s+—\s*/i, "");
 const stripSectionPrefix = (t) => t.replace(/^\d+\.\s*/, "").replace(/^[A-Z]\.\s*/, "");
-const allParts = [...handbook.parts, ...codingParts];
 const searchIndex = allParts.flatMap((p) =>
   p.sections.flatMap((s) => s.questions.map((q) => ({ ...q, _part: p.title, _section: s.title })))
 );

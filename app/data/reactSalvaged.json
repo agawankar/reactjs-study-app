@@ -1,0 +1,484 @@
+{
+  "sections": [
+    {
+      "title": "React Fundamentals (Core Q&A)",
+      "questions": [
+        {
+          "id": "Q30.",
+          "question": "What is React?",
+          "answer": "React is a JavaScript library for building component-based user interfaces. It uses declarative rendering: we describe what the UI should look like for a given state, and React manages updates.",
+          "code": ""
+        },
+        {
+          "id": "Q31.",
+          "question": "What causes a React component to re-render?",
+          "answer": "State updates, parent renders that cause the child to be evaluated, changed props and certain context updates can trigger rendering. A render does not automatically mean a DOM change; React reconciles the result.",
+          "code": ""
+        },
+        {
+          "id": "Q32.",
+          "question": "What is the Virtual DOM?",
+          "answer": "It is a conceptual representation of the UI in JavaScript objects. React compares the previous and next representations and commits the necessary DOM changes. The important performance benefit is efficient update coordination rather than simply 'the Virtual DOM is faster than the DOM.'",
+          "code": ""
+        },
+        {
+          "id": "Q33.",
+          "question": "What is reconciliation?",
+          "answer": "React compares the previous element tree with the next one to determine which elements and DOM properties need to change. Stable element types and keys help preserve identity.",
+          "code": ""
+        },
+        {
+          "id": "Q34.",
+          "question": "Why are keys important?",
+          "answer": "Keys provide stable identity for list items. They allow React to correctly associate previous and next elements. Stable database/business IDs are preferable to array indexes when list order can change.",
+          "code": ""
+        },
+        {
+          "id": "Q35.",
+          "question": "useState?",
+          "answer": "useState adds local state to a functional component. Updating state schedules a render. When the next state depends on the previous state, use the functional form.",
+          "code": "const [count, setCount] = useState(0);\nsetCount(prev => prev + 1);"
+        },
+        {
+          "id": "Q36.",
+          "question": "useEffect?",
+          "answer": "useEffect is used to synchronize a component with an external system such as a subscription, timer, browser API or network interaction. It runs after the relevant render is committed. It should not be used for every piece of derived data; simple calculations usually belong directly in rendering or useMemo when justified.",
+          "code": ""
+        },
+        {
+          "id": "Q37.",
+          "question": "What does the dependency array do?",
+          "answer": "It tells React which reactive values the effect depends on. React reruns the effect when those dependencies change. An empty array means the effect is not rerun due to dependency changes after mount, although development behavior can still expose setup/cleanup issues.",
+          "code": ""
+        },
+        {
+          "id": "Q38.",
+          "question": "Why is cleanup important?",
+          "answer": "Cleanup prevents subscriptions, timers and other external resources from continuing after a component no longer needs them. It also helps prevent stale callbacks and resource leaks.",
+          "code": ""
+        },
+        {
+          "id": "Q39.",
+          "question": "useRef?",
+          "answer": "useRef stores a mutable value that persists across renders without causing a re-render when changed. It is commonly used for DOM references, timers, previous values and imperative integrations.",
+          "code": ""
+        },
+        {
+          "id": "Q40.",
+          "question": "useMemo vs useCallback?",
+          "answer": "useMemo caches a computed value; useCallback caches a function reference. Both should be used based on a real optimization need, not automatically.",
+          "code": ""
+        },
+        {
+          "id": "Q41.",
+          "question": "React.memo?",
+          "answer": "React.memo can skip rendering a child when its props are equal according to the memoization comparison. It is most useful when the child is expensive and receives stable props.",
+          "code": ""
+        },
+        {
+          "id": "Q42.",
+          "question": "Controlled vs uncontrolled inputs?",
+          "answer": "Controlled inputs keep their value in React state. Uncontrolled inputs keep their value in the DOM and are accessed through refs. Controlled inputs are often easier for validation and dynamic forms; uncontrolled approaches can reduce state updates in some scenarios.",
+          "code": ""
+        },
+        {
+          "id": "Q43.",
+          "question": "What are custom hooks?",
+          "answer": "Custom hooks are functions that reuse stateful React logic across components. They can combine built-in hooks and return a focused API. A good custom hook hides implementation details without unnecessarily coupling unrelated components.",
+          "code": "function useOnline() {\n  const [online, setOnline] = useState(navigator.onLine);\n  // subscribe to online/offline events...\n  return online;\n}"
+        },
+        {
+          "id": "Q44.",
+          "question": "How do you optimize a slow React page?",
+          "answer": "Measure first using React DevTools Profiler and browser performance tools. Identify unnecessary renders, expensive calculations, large lists, excessive state updates, network bottlenecks or bundle size. Then use appropriate techniques such as state colocation, memoization, virtualization, lazy loading, debouncing or better data fetching. I avoid optimization by guesswork.",
+          "code": ""
+        },
+        {
+          "id": "Q45.",
+          "question": "What is lazy loading/code splitting?",
+          "answer": "Code splitting breaks JavaScript into smaller chunks that can be loaded when needed. React.lazy and dynamic imports can defer code for routes or heavy components, reducing initial JavaScript.",
+          "code": "const Reports = React.lazy(() => import(\"./Reports\"));"
+        }
+      ]
+    },
+    {
+      "title": "React 18 & 19 Features",
+      "questions": [
+        {
+          "id": "Q556.",
+          "question": "What are the headline additions in React 19?",
+          "answer": "React 19's main additions are built around simplifying async UI: Actions (functions passed to form/transition APIs that handle pending, error and optimistic state automatically), the useActionState, useFormStatus and useOptimistic hooks built on top of Actions, the use() hook for reading promises and context conditionally during render, ref as a plain prop on function components (removing most need for forwardRef), and the React Compiler, which auto-memoizes components at build time. Server Components and Server Actions also became stable as part of the same release wave.",
+          "code": ""
+        },
+        {
+          "id": "Q557.",
+          "question": "What is an Action in React 19, and why does it matter?",
+          "answer": "An Action is any function passed to a transition (via startTransition, a <form action={fn}> prop, or a hook built on this pattern) that can be async. React automatically tracks its pending state, catches thrown errors, and can apply optimistic UI updates around it, so you no longer hand-roll isSubmitting/error/try-catch boilerplate for every async form submit.",
+          "code": "function ChangeName({ name, updateName }) {\n  const [error, submitAction, isPending] = useActionState(\n    async (previousState, formData) => {\n      const err = await updateName(formData.get(\"name\"));\n      if (err) return err;\n      return null;\n    },\n    null\n  );\n\n  return (\n    <form action={submitAction}>\n      <input type=\"text\" name=\"name\" />\n      <button disabled={isPending}>Update</button>\n      {error && <p>{error}</p>}\n    </form>\n  );\n}"
+        },
+        {
+          "id": "Q558.",
+          "question": "What does useFormStatus give you that plain props don't?",
+          "answer": "useFormStatus reads the pending/data/method state of the nearest parent <form> from inside a child component, without that state being threaded down as props. This lets a reusable submit button or field disable itself while its enclosing form is submitting, even though it has no direct knowledge of the form's own state.",
+          "code": "function SubmitButton() {\n  const { pending } = useFormStatus();\n  return <button disabled={pending}>{pending ? \"Saving...\" : \"Save\"}</button>;\n}\n\nfunction ProfileForm() {\n  return (\n    <form action={saveProfile}>\n      <input name=\"email\" />\n      <SubmitButton />\n    </form>\n  );\n}"
+        },
+        {
+          "id": "Q559.",
+          "question": "What problem does useOptimistic solve?",
+          "answer": "useOptimistic lets you render an optimistic value immediately while an async update is in flight, and automatically reverts to the real state once the action settles (or the next render provides new state). It removes manual 'temporary local state plus rollback on error' plumbing for patterns like liking a post or sending a chat message before the server confirms it.",
+          "code": "function Thread({ messages, sendMessage }) {\n  const [optimisticMessages, addOptimistic] = useOptimistic(\n    messages,\n    (state, newMessage) => [...state, { ...newMessage, sending: true }]\n  );\n\n  async function formAction(formData) {\n    const text = formData.get(\"message\");\n    addOptimistic({ text });\n    await sendMessage(text);\n  }\n\n  return (\n    <>\n      {optimisticMessages.map((m, i) => <p key={i}>{m.text}{m.sending ? \" (sending...)\" : \"\"}</p>)}\n      <form action={formAction}><input name=\"message\" /></form>\n    </>\n  );\n}"
+        },
+        {
+          "id": "Q560.",
+          "question": "What is the use() hook, and how is it different from other hooks?",
+          "answer": "use() reads the value of a promise or context during render, and unlike other hooks it can be called conditionally or inside loops since it isn't bound by the rules-of-hooks call-order restriction. Passing it a promise integrates with Suspense: React suspends the component until the promise resolves, which is useful for reading data fetched by a parent Server Component or cache without a separate loading-state hook.",
+          "code": "function Comments({ commentsPromise }) {\n  // Suspends until the promise resolves, no useEffect/useState needed\n  const comments = use(commentsPromise);\n  return comments.map(c => <p key={c.id}>{c.text}</p>);\n}\n\nfunction Page({ commentsPromise }) {\n  return (\n    <Suspense fallback={<Spinner />}>\n      <Comments commentsPromise={commentsPromise} />\n    </Suspense>\n  );\n}"
+        },
+        {
+          "id": "Q561.",
+          "question": "How did ref handling change in React 19?",
+          "answer": "ref can now be passed as a regular prop to function components, so most components no longer need to be wrapped in forwardRef just to expose a DOM node or imperative handle to a parent. forwardRef still works for backward compatibility but is being phased out in favor of this simpler API.",
+          "code": "function TextInput({ ref, ...props }) {\n  return <input ref={ref} {...props} />;\n}\n\nfunction Form() {\n  const inputRef = useRef(null);\n  return <TextInput ref={inputRef} placeholder=\"Name\" />;\n}"
+        },
+        {
+          "id": "Q562.",
+          "question": "What does the React Compiler do, and does it replace useMemo/useCallback?",
+          "answer": "The React Compiler is a build-time tool that analyzes component code and automatically inserts memoization equivalent to useMemo/useCallback/React.memo, based on actual data dependencies rather than a developer manually listing them. It doesn't remove the concepts of memoization, but it removes the need to hand-write most of it and reduces bugs from stale or missing dependency arrays; existing manual memoization is generally still safe to leave in place while the compiler is adopted incrementally.",
+          "code": ""
+        },
+        {
+          "id": "Q563.",
+          "question": "What is useTransition, and when would you reach for it over debouncing?",
+          "answer": "useTransition marks a state update as non-urgent, letting React keep the UI responsive to more urgent updates (like typing) while the transition's work renders in the background and can be interrupted. Unlike debouncing, the state update still happens on every change; React just deprioritizes committing the resulting render, which suits expensive re-renders driven directly by user input, such as filtering a large list as you type.",
+          "code": "function SearchPage() {\n  const [query, setQuery] = useState(\"\");\n  const [isPending, startTransition] = useTransition();\n  const [results, setResults] = useState([]);\n\n  function handleChange(e) {\n    const value = e.target.value;\n    setQuery(value); // urgent: keep input responsive\n    startTransition(() => {\n      setResults(filterLargeList(value)); // non-urgent\n    });\n  }\n\n  return (\n    <>\n      <input value={query} onChange={handleChange} />\n      {isPending ? <Spinner /> : <ResultsList items={results} />}\n    </>\n  );\n}"
+        },
+        {
+          "id": "Q564.",
+          "question": "What is useDeferredValue, and how is it different from useTransition?",
+          "answer": "useDeferredValue takes a value and returns a version of it that lags behind during urgent updates, letting a slow-to-render child keep working off the previous value while a new one is being computed, without wrapping the state setter itself in a transition. useTransition is used when you control the state update and want to mark it low priority; useDeferredValue is used when you only have a value (often a prop) and want to defer rendering that depends on it.",
+          "code": "function SearchResults({ query }) {\n  const deferredQuery = useDeferredValue(query);\n  const results = useMemo(() => filterLargeList(deferredQuery), [deferredQuery]);\n  return <ResultsList items={results} />;\n}"
+        },
+        {
+          "id": "Q565.",
+          "question": "How does document metadata support in React 19 change how you set <title> and meta tags?",
+          "answer": "React 19 lets components render <title>, <meta> and <link> tags directly in JSX anywhere in the tree, and React hoists them into the document <head> automatically, including in Server Components. This removes the need for a separate head-management library for simple cases where a page or route wants to set its own title/description.",
+          "code": "function BlogPost({ post }) {\n  return (\n    <article>\n      <title>{post.title} — My Blog</title>\n      <meta name=\"description\" content={post.summary} />\n      <h1>{post.title}</h1>\n    </article>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "title": "Modern React — 2026 Expectations",
+      "questions": [
+        {
+          "id": "Q116.",
+          "question": "What is React Compiler?",
+          "answer": "React Compiler is a build-time optimization tool that analyzes React components and hooks and can automatically apply memoization. This changes the optimization conversation: developers should still understand rendering and performance, but should not blindly add useMemo/useCallback everywhere. Existing manual memoization can still be relevant and should be validated before removal.",
+          "code": ""
+        },
+        {
+          "id": "Q117.",
+          "question": "Does React Compiler mean useMemo and useCallback are obsolete?",
+          "answer": "No. The compiler can reduce the need for manual memoization, but useMemo/useCallback remain available for cases where explicit control is useful. The correct senior answer is to understand the compiler, measure performance, and avoid unnecessary manual optimization.",
+          "code": ""
+        },
+        {
+          "id": "Q118.",
+          "question": "What are useTransition and useDeferredValue?",
+          "answer": "They help separate urgent UI work from non-urgent updates. useTransition marks state updates as non-blocking; useDeferredValue lets a non-critical value lag behind a more urgent value. They are useful when an expensive UI update should not block typing or immediate interaction.",
+          "code": ""
+        },
+        {
+          "id": "Q119.",
+          "question": "What does component purity mean in React?",
+          "answer": "Components and hooks should behave like pure functions of their inputs during rendering. Side effects belong in appropriate effects or external systems. Purity helps React reason about rendering and enables modern optimization strategies.",
+          "code": ""
+        },
+        {
+          "id": "Q120.",
+          "question": "When would you use useReducer instead of useState?",
+          "answer": "useReducer is useful when state transitions are complex, multiple fields change together, or you want explicit action-driven update logic. It can make complex local state easier to test and reason about.",
+          "code": ""
+        },
+        {
+          "id": "Q121.",
+          "question": "How would you prevent unnecessary context re-renders?",
+          "answer": "Split contexts by responsibility, keep provider values stable where appropriate, avoid putting rapidly changing state into broad contexts, and consider selectors or another state-management mechanism when the update pattern becomes complex.",
+          "code": ""
+        }
+      ]
+    },
+    {
+      "title": "React Compiler & Memoization Decisions",
+      "questions": [
+        {
+          "id": "Q166.",
+          "question": "What is React Compiler?",
+          "answer": "Interview answer: React Compiler is a build-time optimizer that understands React's rules and can automatically memoize components and values to reduce unnecessary recalculation and re-rendering. The important interview point is that performance still starts with correct component/state design and measurement.\n2026 note: Current React guidance recommends relying on the compiler for new-code memoization where it is enabled, while keeping or carefully testing existing manual memoization before removing it.",
+          "code": ""
+        },
+        {
+          "id": "Q167.",
+          "question": "Does React Compiler make useMemo, useCallback and React.memo obsolete?",
+          "answer": "Interview answer: No. It reduces the need for routine manual memoization, but explicit memoization still exists as an escape hatch when precise identity control is required. I would not mechanically remove existing memoization from a production codebase; I would test behavior and performance.",
+          "code": "// Without reaching for useMemo immediately:\nfunction ProductList({ products, query }) {\n  const visible = products.filter(p =>\n    p.name.toLowerCase().includes(query.toLowerCase())\n  );\n\n  return visible.map(p => <ProductRow key={p.id} product={p} />);\n}"
+        },
+        {
+          "id": "Q168.",
+          "question": "What should your performance workflow be in modern React?",
+          "answer": "Interview answer: First fix state ownership and component boundaries, then profile. Reduce unnecessary work and data volume. Use the compiler where supported, and use manual memoization only when it solves a measured problem or provides required reference stability.\nBad answer: 'I wrap every handler in useCallback.'\nBetter answer: 'I profile, identify expensive work or unstable props, and optimize the specific path.'",
+          "code": ""
+        }
+      ]
+    },
+    {
+      "title": "useTransition, useDeferredValue & Non-Blocking UI",
+      "questions": [
+        {
+          "id": "Q169.",
+          "question": "What is useTransition?",
+          "answer": "Interview answer: useTransition lets React treat selected state updates as non-urgent. Urgent interactions such as typing can remain responsive while a heavier UI update is rendered in the background.\nImportant limitation: Transition updates are not intended to control the text input value itself. Keep the input update urgent and transition the expensive dependent update.",
+          "code": "const [isPending, startTransition] = useTransition();\n\nfunction changeTab(tab) {\n  startTransition(() => {\n    setActiveTab(tab);\n  });\n}"
+        },
+        {
+          "id": "Q170.",
+          "question": "What is useDeferredValue?",
+          "answer": "Interview answer: useDeferredValue lets part of the UI temporarily continue using an older value while React prepares an update using the new value. It is useful when a rapidly changing value drives an expensive child tree.",
+          "code": "const [query, setQuery] = useState(\"\");\nconst deferredQuery = useDeferredValue(query);\n\nreturn (\n  <>\n    <input value={query} onChange={e => setQuery(e.target.value)} />\n    <LargeResultList query={deferredQuery} />\n  </>\n);"
+        },
+        {
+          "id": "Q171.",
+          "question": "useTransition vs useDeferredValue?",
+          "answer": "Interview answer: Use useTransition when I control the state update and want to mark that update as non-urgent. Use useDeferredValue when I receive or already have a value and want a slower part of the UI to lag behind it.\nSenior follow-up: Neither makes expensive code free. If filtering 100,000 records is fundamentally too expensive, I still need virtualization, server-side filtering, better algorithms or reduced data.",
+          "code": ""
+        }
+      ]
+    },
+    {
+      "title": "Advanced / Staff-Level React",
+      "questions": [
+        {
+          "id": "Q380.",
+          "question": "Rendering vs commit?",
+          "answer": "Rendering calculates the next UI; commit applies required host changes. Effects follow React's effect lifecycle.",
+          "code": ""
+        },
+        {
+          "id": "Q381.",
+          "question": "Why must render be pure?",
+          "answer": "React may render more than once and optimize/restart work. Side effects during render make behavior unpredictable.",
+          "code": ""
+        },
+        {
+          "id": "Q382.",
+          "question": "Strict Mode?",
+          "answer": "Development checks that expose unsafe patterns; apparent repeated setup/render behavior should not be mistaken for production behavior.",
+          "code": ""
+        },
+        {
+          "id": "Q383.",
+          "question": "State as a snapshot?",
+          "answer": "Each render sees its own state snapshot. setState schedules another render; it does not mutate the current render's variable.",
+          "code": ""
+        },
+        {
+          "id": "Q384.",
+          "question": "Why does setCount(count+1) twice usually add one?",
+          "answer": "Both expressions use the same snapshot. Functional updates apply sequential transformations.",
+          "code": ""
+        },
+        {
+          "id": "Q385.",
+          "question": "Automatic batching?",
+          "answer": "React can group multiple state updates into fewer renders in many contexts, improving efficiency.",
+          "code": ""
+        },
+        {
+          "id": "Q386.",
+          "question": "Stale closure?",
+          "answer": "A callback retains values from its creation render. Later execution may see old state; use functional updates, dependencies or refs as appropriate.",
+          "code": ""
+        },
+        {
+          "id": "Q387.",
+          "question": "useRef?",
+          "answer": "Persistent mutable value that does not trigger re-render when changed.",
+          "code": ""
+        },
+        {
+          "id": "Q388.",
+          "question": "When not to use useEffect?",
+          "answer": "Do not use it for simple derived data, direct event responses or state synchronization that can be expressed during rendering.",
+          "code": ""
+        },
+        {
+          "id": "Q389.",
+          "question": "Why do effects loop?",
+          "answer": "An effect updates a dependency that triggers it again. Fix the underlying synchronization relationship.",
+          "code": ""
+        },
+        {
+          "id": "Q390.",
+          "question": "Rules of Hooks?",
+          "answer": "Call hooks only at the top level of React components or custom hooks, not conditionally or inside arbitrary functions.",
+          "code": ""
+        },
+        {
+          "id": "Q391.",
+          "question": "Compound components?",
+          "answer": "Related components share state/context to create a flexible declarative API, such as Tabs.",
+          "code": ""
+        },
+        {
+          "id": "Q392.",
+          "question": "Render props?",
+          "answer": "Pass a rendering function to a component. Hooks/composition often provide simpler modern alternatives.",
+          "code": ""
+        },
+        {
+          "id": "Q393.",
+          "question": "HOC?",
+          "answer": "A function that accepts a component and returns an enhanced component. Useful in some libraries but can add wrapper complexity.",
+          "code": ""
+        },
+        {
+          "id": "Q394.",
+          "question": "State colocation?",
+          "answer": "Keep state close to the components that actually use it to reduce unnecessary updates and clarify ownership.",
+          "code": ""
+        },
+        {
+          "id": "Q395.",
+          "question": "Lifting state?",
+          "answer": "Move shared state to the nearest common ancestor when siblings need coordination.",
+          "code": ""
+        },
+        {
+          "id": "Q396.",
+          "question": "Derived state?",
+          "answer": "A value calculated from props/state. Avoid storing duplicates that can become inconsistent.",
+          "code": ""
+        },
+        {
+          "id": "Q397.",
+          "question": "Context overuse?",
+          "answer": "Broad, frequently changing context can cause many consumers to re-render; split contexts or use a targeted state mechanism.",
+          "code": ""
+        },
+        {
+          "id": "Q398.",
+          "question": "Large form optimization?",
+          "answer": "Localize field updates, avoid rerendering the whole form, validate at sensible times and virtualize large dynamic sections if needed.",
+          "code": ""
+        },
+        {
+          "id": "Q399.",
+          "question": "Large table optimization?",
+          "answer": "Use server filtering/pagination, virtualization, stable row identity and measured memoization.",
+          "code": ""
+        },
+        {
+          "id": "Q400.",
+          "question": "Suspense?",
+          "answer": "A mechanism for coordinating UI around supported asynchronous rendering boundaries and fallbacks.",
+          "code": ""
+        },
+        {
+          "id": "Q401.",
+          "question": "Error boundaries?",
+          "answer": "Catch rendering errors in descendant trees and show fallback UI; they do not replace arbitrary async error handling.",
+          "code": ""
+        },
+        {
+          "id": "Q402.",
+          "question": "API error states?",
+          "answer": "Represent loading/success/error explicitly, cancel stale requests and provide actionable feedback.",
+          "code": ""
+        },
+        {
+          "id": "Q403.",
+          "question": "Prevent stale responses?",
+          "answer": "Abort previous requests or use request IDs and only commit the latest response.",
+          "code": ""
+        },
+        {
+          "id": "Q404.",
+          "question": "Optimistic UI?",
+          "answer": "Update immediately assuming success, then confirm or roll back. It improves responsiveness but needs conflict/rollback handling.",
+          "code": ""
+        },
+        {
+          "id": "Q405.",
+          "question": "Idempotent UI actions?",
+          "answer": "Prevent repeated clicks/retries from creating duplicate mutations; combine UI guards with server idempotency for important operations.",
+          "code": ""
+        },
+        {
+          "id": "Q406.",
+          "question": "Reusable component design?",
+          "answer": "Small API, composition, internal accessibility and no unnecessary business assumptions.",
+          "code": ""
+        },
+        {
+          "id": "Q407.",
+          "question": "When is a component too large?",
+          "answer": "When it owns unrelated concerns, mixes API/business/UI complexity and becomes hard to test. Split by responsibility/domain.",
+          "code": ""
+        },
+        {
+          "id": "Q408.",
+          "question": "When should you create a shared component?",
+          "answer": "When behavior/semantics repeat and requirements are stable. Visual similarity alone is not enough.",
+          "code": ""
+        },
+        {
+          "id": "Q409.",
+          "question": "React Compiler impact?",
+          "answer": "It can automatically memoize components/hooks at build time, reducing routine manual memoization. It does not solve poor state ownership, huge data processing or network waterfalls. Current React guidance recommends relying on compiler optimization for new code where enabled and using manual memoization when precise control is needed.",
+          "code": ""
+        },
+        {
+          "id": "Q410.",
+          "question": "React Compiler directives?",
+          "answer": "The compiler supports directives such as use memo and use no memo for fine-grained compilation control in supported modes.",
+          "code": ""
+        },
+        {
+          "id": "Q411.",
+          "question": "useTransition?",
+          "answer": "Marks selected state updates as non-urgent so urgent interactions remain responsive.",
+          "code": ""
+        },
+        {
+          "id": "Q412.",
+          "question": "useDeferredValue?",
+          "answer": "Allows a slower part of the UI to lag behind a rapidly changing value.",
+          "code": ""
+        },
+        {
+          "id": "Q413.",
+          "question": "Transition vs deferred value?",
+          "answer": "Use transition when you control the state update; use deferred value when you already have a value and want a dependent expensive UI to lag.",
+          "code": ""
+        },
+        {
+          "id": "Q414.",
+          "question": "How do you optimize a React page?",
+          "answer": "Measure with Profiler/browser tools, identify rendering/data/network bottlenecks and fix the largest measured cause first.",
+          "code": ""
+        },
+        {
+          "id": "Q415.",
+          "question": "How do you handle 100K records?",
+          "answer": "Do not render all at once. Use server-side filtering/pagination, virtualization and efficient state/data structures.",
+          "code": ""
+        },
+        {
+          "id": "Q416.",
+          "question": "What is perceived performance?",
+          "answer": "How quickly the user feels the interface responds. Skeletons, optimistic updates, transitions and progressive loading can improve perception while real performance is also addressed.\nFunctional updates use the latest queued state, so this pattern increments by two.",
+          "code": "function Counter() {\n  const [count, setCount] = React.useState(0);\n\n  function click() {\n    setCount(c => c + 1);\n    setCount(c => c + 1);\n  }\n\n  return <button onClick={click}>{count}</button>;\n}"
+        }
+      ]
+    }
+  ]
+}

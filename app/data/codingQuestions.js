@@ -1,5 +1,7 @@
 import raw from "./javascript_react_interview_master_coding_questions.json";
 import nodejsRaw from "./nodejsCodingQuestions.json";
+import reactChallenges from "./reactCodingChallenges.js";
+import codingSalvaged from "./codingSalvaged.json";
 
 function meta(lines) {
   return lines.filter(Boolean).join("\n\n");
@@ -43,7 +45,9 @@ const codingParts = [
     sections: [
       { title: "1. JavaScript Coding Challenges", questions: jsQuestions },
       { title: "2. React Coding Challenges", questions: reactQuestions },
-      { title: "3. Node.js Coding Challenges", questions: nodejsQuestions },
+      { title: "3. React Hooks & Patterns Challenges", questions: reactChallenges },
+      { title: "4. Node.js Coding Challenges", questions: nodejsQuestions },
+      ...codingSalvaged.sections,
     ],
   },
 ];
